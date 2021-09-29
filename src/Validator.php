@@ -34,7 +34,7 @@ class Validator extends BaseValidator
 		'required'  => [
 			'class' => 'validator\RequiredValidator',
 		],
-		'enums'     => [
+		'enum'     => [
 			'class' => 'validator\EnumValidator',
 		],
 		'unique'    => [
