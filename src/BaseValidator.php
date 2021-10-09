@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace validator;
 
 
-use Database\ActiveRecord;
+use Database\Model;
 use Exception;
 
 abstract class BaseValidator
@@ -22,7 +22,7 @@ abstract class BaseValidator
 
 	protected array $params = [];
 
-	protected ?ActiveRecord $model = null;
+	protected ?Model $model = null;
 
 
 	/**
@@ -34,9 +34,9 @@ abstract class BaseValidator
 	}
 
 	/**
-	 * @return ActiveRecord|null
+	 * @return Model|null
 	 */
-	public function getModel(): ?ActiveRecord
+	public function getModel(): ?Model
 	{
 		return $this->model;
 	}
