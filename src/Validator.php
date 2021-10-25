@@ -34,7 +34,7 @@ class Validator extends BaseValidator
 		'required'  => [
 			'class' => 'validator\RequiredValidator',
 		],
-		'enum'     => [
+		'enum'      => [
 			'class' => 'validator\EnumValidator',
 		],
 		'unique'    => [
@@ -102,8 +102,8 @@ class Validator extends BaseValidator
 			'class'  => 'validator\LengthValidator',
 			'method' => 'default',
 		],
-		'round'    => [
-			'class'  => 'validator\RoundValidator',
+		'round'     => [
+			'class' => 'validator\RoundValidator',
 		],
 	];
 
@@ -150,33 +150,29 @@ class Validator extends BaseValidator
 	public function createRule($field, $rule, $model, $param)
 	{
 		$define = ['field' => $field];
-		foreach ($rule as $key => $val) {
 
-			if (!is_null($model)) {
+		$is_model = is_null($model);
+		foreach ($rule as $key => $val) {
+			if (!$is_model) {
 				if (is_string($val) && method_exists($model, $val)) {
 					$this->validators[] = [$model, $val];
 					continue;
 				}
 			}
-
 			if (is_string($key)) {
 				$type = strtolower($key);
 				$define['value'] = $val;
 			} else {
 				$type = strtolower($val);
 			}
-
 			if (!isset($this->classMap[$type])) {
 				continue;
 			}
-			$constr = array_merge($this->classMap[$type], $define);
-
-			/** @var BaseValidator $class */
-			$class = Kiri::createObject($constr);
-			$class->setParams($param);
-			$class->setModel($model);
-
-			$this->validators[] = $class;
+			$constr = array_merge($this->classMap[$type], $define, [
+				'params' => $param,
+				'model'  => $model
+			]);
+			$this->validators[] = $constr;
 		}
 	}
 
@@ -189,7 +185,6 @@ class Validator extends BaseValidator
 		if (count($this->validators) < 1) {
 			return true;
 		}
-
 		foreach ($this->validators as $val) {
 			if ($this->check($val)) {
 				continue;
@@ -215,7 +210,13 @@ class Validator extends BaseValidator
 		if (is_callable($val, true)) {
 			return call_user_func($val, $this);
 		}
-		return $val->trigger();
+
+		$class = Kiri::getDi()->get($val['class']);
+		unset($val['class']);
+
+		Kiri::configure($class, $val);
+
+		return $class->trigger();
 	}
 
 }
