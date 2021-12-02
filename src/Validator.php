@@ -186,13 +186,14 @@ class Validator extends BaseValidator
 			return true;
 		}
 		foreach ($this->validators as $val) {
-			if ($this->check($val)) {
+			[$result, $validator] = $this->check($val);
+			if ($result === true) {
 				continue;
 			}
 			$isTrue = false;
-			if ($val instanceof BaseValidator) {
-				var_dump($val->getError());
-				$this->addError($val->getError());
+			if ($validator instanceof BaseValidator) {
+				var_dump($validator->getError());
+				$this->addError($validator->getError());
 			}
 			break;
 		}
@@ -209,7 +210,7 @@ class Validator extends BaseValidator
 	private function check(BaseValidator|array|Closure $val): mixed
 	{
 		if (is_callable($val, true)) {
-			return call_user_func($val, $this);
+			return [call_user_func($val, $this), $val];
 		}
 
 		$class = Kiri::getDi()->get($val['class']);
@@ -217,7 +218,7 @@ class Validator extends BaseValidator
 
 		Kiri::configure($class, $val);
 
-		return $class->trigger();
+		return [$class->trigger(), $class];
 	}
 
 }
