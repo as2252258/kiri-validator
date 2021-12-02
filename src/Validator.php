@@ -191,6 +191,7 @@ class Validator extends BaseValidator
 			}
 			$isTrue = false;
 			if ($val instanceof BaseValidator) {
+				var_dump($val->getError());
 				$this->addError($val->getError());
 			}
 			break;
