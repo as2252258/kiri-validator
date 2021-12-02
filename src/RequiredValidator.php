@@ -20,10 +20,7 @@ class RequiredValidator extends BaseValidator
 	public function trigger(): bool
 	{
 		$param = $this->getParams();
-		if (is_numeric($param)) {
-			return true;
-		}
-		if (empty($param) || !isset($param[$this->field])) {
+		if (!is_array($param) || !isset($param[$this->field])) {
 			return $this->addError('The param :attribute not exists');
 		} else {
 			return true;
