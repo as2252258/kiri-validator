@@ -66,12 +66,12 @@ abstract class BaseValidator
 	}
 
 	/**
-	 * @throws Exception
 	 * @return bool
+	 * @throws Exception
 	 */
 	public function trigger(): bool
 	{
-    	throw new Exception('Child Class must define method of trigger');
+		throw new Exception('Child Class must define method of trigger');
 	}
 
 	/**
@@ -83,11 +83,14 @@ abstract class BaseValidator
 	}
 
 	/**
-	 * @param array $data
+	 * @param array|null $data
 	 * @return $this
 	 */
-	public function setParams(array $data): static
+	public function setParams(?array $data): static
 	{
+		if (is_null($data)) {
+			$data = [];
+		}
 		$this->params = $data;
 		return $this;
 	}
