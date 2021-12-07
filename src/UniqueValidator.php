@@ -30,7 +30,7 @@ class UniqueValidator extends BaseValidator
 		}
 
 		$model = $this->model;
-		if (!$this->model->getIsCreate()) {
+		if (!$this->model->getIsNowExample()) {
 			return true;
 		}
 		if ($model::query()->where([$this->field => $param[$this->field]])->exists()) {
