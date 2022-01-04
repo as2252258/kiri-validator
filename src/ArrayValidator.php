@@ -24,14 +24,13 @@ class ArrayValidator extends BaseValidator
 	 */
 	public function trigger(): bool
 	{
-		$param = $this->getParams();
-		if (empty($param) || !is_array($param)) {
+		if (empty($this->params)) {
 			return true;
 		}
-		if (!isset($param[$this->field])) {
+		if (!isset($this->params[$this->field])) {
 			return true;
 		}
-		if (!is_array($param[$this->field])) {
+		if (!is_array($this->params[$this->field])) {
 			return $this->addError("The param :attribute must a array");
 		}
 		return true;

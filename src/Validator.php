@@ -168,11 +168,10 @@ class Validator extends BaseValidator
 			if (!isset($this->classMap[$type])) {
 				continue;
 			}
-			$constr = array_merge($this->classMap[$type], $define, [
+			$this->validators[] = array_merge($this->classMap[$type], $define, [
 				'params' => $param,
 				'model'  => $model
 			]);
-			$this->validators[] = $constr;
 		}
 	}
 

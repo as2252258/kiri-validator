@@ -25,26 +25,19 @@ class DateTimeValidator extends BaseValidator
 	 */
 	public function trigger(): bool
 	{
-		$param = $this->getParams();
-		if (empty($param) || !is_array($param)) {
+		if (empty($this->params)) {
 			return true;
 		}
-		if (!isset($param[$this->field]) || empty($param[$this->field])) {
+		if (!isset($this->params[$this->field]) || empty($this->params[$this->field])) {
 			return true;
 		}
-		$value = $param[$this->field];
-		switch (strtolower($this->method)) {
-			case self::DATE:
-				return $this->validatorDate($value);
-			case self::DATE_TIME:
-				return $this->validateDatetime($value);
-			case self::TIME:
-				return $this->validatorTime($value);
-			case self::STR_TO_TIME:
-				return $this->validatorTimestamp($value);
-			default:
-				return true;
-		}
+		return match (strtolower($this->method)) {
+			self::DATE => $this->validatorDate($this->params[$this->field]),
+			self::DATE_TIME => $this->validateDatetime($this->params[$this->field]),
+			self::TIME => $this->validatorTime($this->params[$this->field]),
+			self::STR_TO_TIME => $this->validatorTimestamp($this->params[$this->field]),
+			default => true,
+		};
 	}
 	
 	/**

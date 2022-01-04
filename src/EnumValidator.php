@@ -20,22 +20,15 @@ class EnumValidator extends BaseValidator
 	 */
 	public function trigger(): bool
 	{
-		$param = $this->getParams();
-		if (empty($param) || !isset($param[$this->field])) {
+		if (empty($this->params) || !isset($this->params[$this->field])) {
 			return $this->addError('The param :attribute is null');
 		}
-		$value = $param[$this->field];
-		if (is_null($value)) {
+		if (is_null($this->params[$this->field])) {
 			return $this->addError('The param :attribute is null');
 		}
-
-		if (!is_array($this->value)) {
-			return true;
-		}
-		if (!in_array($value, $this->value)) {
+		if (!in_array($this->params[$this->field], $this->value)) {
 			return $this->addError($this->i());
 		}
-
 		return true;
 	}
 

@@ -28,12 +28,10 @@ class UniqueValidator extends BaseValidator
 		if (empty($this->model)) {
 			return $this->addError('Model error.');
 		}
-
-		$model = $this->model;
 		if (!$this->model->getIsNowExample()) {
 			return true;
 		}
-		if ($model::query()->where([$this->field => $param[$this->field]])->exists()) {
+		if ($this->model::query()->where([$this->field => $param[$this->field]])->exists()) {
 			return $this->addError('The :attribute \'' . $param[$this->field] . '\' is exists!');
 		}
 		return $this->isFail = TRUE;

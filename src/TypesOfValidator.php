@@ -46,21 +46,13 @@ class TypesOfValidator extends BaseValidator
 		if (!in_array($this->method, $this->types)) {
 			return true;
 		}
-
-		$param = $this->getParams();
-		if (empty($param) || !isset($param[$this->field])) {
+		if (empty($this->params) || !isset($this->params[$this->field])) {
 			return true;
 		}
-
-		$value = $param[$this->field];
-
-		$method = $this->method . 'Format';
-
-		if ($value === null) {
+		if ($this->params[$this->field] === null) {
 			return $this->addError('This ' . $this->field . ' is not an empty data.');
 		}
-
-		return $this->{$method}($value);
+		return $this->{$this->method . 'Format'}($this->params[$this->field]);
 	}
 
 	/**

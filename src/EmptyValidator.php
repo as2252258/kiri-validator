@@ -30,26 +30,21 @@ class EmptyValidator extends BaseValidator
 	 */
 	public function trigger(): bool
 	{
-		$param = $this->getParams();
-		if (empty($param) || !isset($param[$this->field])) {
+		if (empty($this->params) || !isset($this->params[$this->field])) {
 			return $this->addError(':attribute not exists');
 		}
-		
-		$value = $param[$this->field];
-		
 		switch (strtolower($this->method)) {
 			case self::CAN_NOT_EMPTY:
-				if (strlen($value) < 1) {
+				if (strlen($this->params[$this->field]) < 1) {
 					return $this->addError('The :attribute can not empty.');
 				}
 				break;
 			case self::CAN_NOT_NULL:
-				if ($value === null) {
+				if ($this->params[$this->field] === null) {
 					return $this->addError('The :attribute can not is null.');
 				}
 				break;
 		}
-		
 		return true;
 	}
 }
