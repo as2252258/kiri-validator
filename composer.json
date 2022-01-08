@@ -15,7 +15,7 @@
   },
   "autoload": {
     "psr-4": {
-      "validator\\": "src/"
+      "validator\\": "./"
      }
   },
   "require-dev": {
