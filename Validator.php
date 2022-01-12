@@ -7,7 +7,7 @@ namespace validator;
 
 use Closure;
 use Exception;
-use Kiri\Kiri;
+use Kiri;
 
 /**
  * Class Validator
