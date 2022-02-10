@@ -22,7 +22,7 @@ class EmailValidator extends BaseValidator
 		if (empty($this->params) || !isset($this->params[$this->field])) {
 			return true;
 		}
-		if (preg_match('/^[a-zA-Z0-9]+([\.\_]{1,})[a-zA-Z0-9]+@[a-zA-Z]+(\.\w+)+/', $this->params[$this->field])) {
+		if (preg_match('/^[a-zA-Z0-9]+([._]+)[a-zA-Z0-9]+@[a-zA-Z]+(\.\w+)+/', $this->params[$this->field])) {
 			return true;
 		} else {
 			return $this->addError('The param :attribute format error');
