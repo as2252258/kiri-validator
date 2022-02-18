@@ -10,7 +10,7 @@ use Exception;
 abstract class BaseValidator
 {
 
-	public string $field = '';
+	public array $field = [];
 
 	public array $rules = [];
 
