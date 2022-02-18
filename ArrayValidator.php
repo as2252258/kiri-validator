@@ -24,46 +24,16 @@ class ArrayValidator extends BaseValidator
 	 */
 	public function trigger(): bool
 	{
-		if (empty($this->params)) {
-			return true;
-		}
-		if (!isset($this->params[$this->field])) {
-			return true;
-		}
-		if (!is_array($this->params[$this->field])) {
-			return $this->addError("The param :attribute must a array");
-		}
-		return true;
-	}
-
-	/**
-	 * @param $data
-	 * @return array
-	 *
-	 * 转成数组
-	 */
-	private function toArray($data): array
-	{
-		if (is_numeric($data)) {
-			return [];
-		} else if (is_null(json_decode($data, true))) {
-			return [];
-		} elseif (is_object($data)) {
-			$data = get_object_vars($data);
-		}
-
-		$_tmp = [];
-		foreach ($data as $key => $val) {
-			if (is_object($val)) {
-				$_tmp[$key] = $this->toArray($val);
-			} else if (is_array($val)) {
-				$_tmp[$key] = $this->toArray($val);
-			} else {
-				$_tmp[$key] = $val;
+		return $this->_validator($this->field, function ($field, $params) {
+			$value = $params[$field] ?? null;
+			if (empty($value)) {
+				return true;
 			}
-		}
-
-		return $_tmp;
+			if (!is_array($value)) {
+				return $this->addError('The param :attribute must a array');
+			}
+			return true;
+		}, $this->params);
 	}
 
 }

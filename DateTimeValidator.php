@@ -12,34 +12,36 @@ namespace validator;
 
 class DateTimeValidator extends BaseValidator
 {
-	
+
 	const DATE = 'date';
 	const DATE_TIME = 'datetime';
 	const TIME = 'time';
 	const STR_TO_TIME = 'timestamp';
 
 	public string $method;
-	
+
 	/**
 	 * @return bool
 	 */
 	public function trigger(): bool
 	{
-		if (empty($this->params)) {
-			return true;
-		}
-		if (!isset($this->params[$this->field]) || empty($this->params[$this->field])) {
-			return true;
-		}
-		return match (strtolower($this->method)) {
-			self::DATE => $this->validatorDate($this->params[$this->field]),
-			self::DATE_TIME => $this->validateDatetime($this->params[$this->field]),
-			self::TIME => $this->validatorTime($this->params[$this->field]),
-			self::STR_TO_TIME => $this->validatorTimestamp($this->params[$this->field]),
-			default => true,
-		};
+		return $this->_validator($this->field, function ($field, $params, $method) {
+			$value = $params[$field] ?? null;
+			if (empty($value)) {
+				return true;
+			}
+			return match ($method) {
+				self::DATE => $this->validatorDate($value),
+				self::DATE_TIME => $this->validateDatetime($value),
+				self::TIME => $this->validatorTime($value),
+				self::STR_TO_TIME => $this->validatorTimestamp($value),
+				default => true,
+			};
+		}, $this->params, strtolower($this->method));
+
+
 	}
-	
+
 	/**
 	 * @param $value
 	 * @return bool
@@ -48,7 +50,7 @@ class DateTimeValidator extends BaseValidator
 	 */
 	public function validatorTime($value): bool
 	{
-		if (empty($value) || !is_string($value)) {
+		if (!is_string($value)) {
 			return $this->addError('The param :attribute not is a date value');
 		}
 		$match = preg_match('/^[0-5]?\d{1}.{1}[0-5]?\d{1}$/', $value, $result);
@@ -58,8 +60,8 @@ class DateTimeValidator extends BaseValidator
 			return $this->addError('The param :attribute format error');
 		}
 	}
-	
-	
+
+
 	/**
 	 * @param $value
 	 * @return bool
@@ -68,7 +70,7 @@ class DateTimeValidator extends BaseValidator
 	 */
 	public function validateDatetime($value): bool
 	{
-		if (empty($value) || !is_string($value)) {
+		if (!is_string($value)) {
 			return $this->addError('The param :attribute not is a date value');
 		}
 		$match = '/^\d{4}\-\d{2}\-\d{2}\s+\d{2}:\d{2}:\d{2}$/';
@@ -79,7 +81,7 @@ class DateTimeValidator extends BaseValidator
 			return $this->addError('The param :attribute format error');
 		}
 	}
-	
+
 	/**
 	 * @param $value
 	 * @return bool
@@ -88,7 +90,7 @@ class DateTimeValidator extends BaseValidator
 	 */
 	public function validatorDate($value): bool
 	{
-		if (empty($value) || !is_string($value)) {
+		if (!is_string($value)) {
 			return $this->addError('The param :attribute not is a date value');
 		}
 		$match = preg_match('/^(\d{4}).*([0-12]).*([0-31]).*$/', $value, $result);
@@ -98,7 +100,7 @@ class DateTimeValidator extends BaseValidator
 			return $this->addError('The param :attribute format error');
 		}
 	}
-	
+
 	/**
 	 * @param $value
 	 * @return bool
@@ -107,7 +109,7 @@ class DateTimeValidator extends BaseValidator
 	 */
 	public function validatorTimestamp($value): bool
 	{
-		if (empty($value) || !is_numeric($value)) {
+		if (!is_numeric($value)) {
 			return $this->addError('The param :attribute not is a timestamp value');
 		}
 		if (strlen((string)$value) != 10) {

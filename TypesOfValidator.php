@@ -43,97 +43,106 @@ class TypesOfValidator extends BaseValidator
 	 */
 	public function trigger(): bool
 	{
-		if (!in_array($this->method, $this->types)) {
-			return true;
-		}
-		if (empty($this->params) || !isset($this->params[$this->field])) {
-			return true;
-		}
-		if ($this->params[$this->field] === null) {
-			return $this->addError('This ' . $this->field . ' is not an empty data.');
-		}
-		return $this->{$this->method . 'Format'}($this->params[$this->field]);
+		return $this->_validator($this->field, function ($field, $params, $method, $types) {
+			if (!in_array($method, $types)) {
+				return true;
+			}
+			if (!isset($params[$field])) {
+				return true;
+			}
+			$value = $params[$field] ?? null;
+			if (empty($value)) {
+				return $this->addError('This ' . $field . ' is not an empty data.');
+			}
+			return $this->{$method . 'Format'}($field, $value);
+		}, $this->params, $this->method, $this->types);
 	}
 
 	/**
+	 * @param $field
 	 * @param $value
 	 * @return bool
 	 */
-	public function jsonFormat($value): bool
+	public function jsonFormat($field, $value): bool
 	{
 		if (!is_string($value) || is_numeric($value)) {
-			return $this->addError('The ' . $this->field . ' not is JSON data.');
+			return $this->addError('The ' . $field . ' not is JSON data.');
 		}
 		if (is_null(json_decode($value))) {
-			return $this->addError('The ' . $this->field . ' not is JSON data.');
+			return $this->addError('The ' . $field . ' not is JSON data.');
 		}
 		return true;
 	}
 
 	/**
+	 * @param $field
 	 * @param $value
 	 * @return bool
 	 */
-	public function serializeFormat($value): bool
+	public function serializeFormat($field, $value): bool
 	{
 		if (!is_string($value) || is_numeric($value)) {
-			return $this->addError('The ' . $this->field . ' not is serialize data.');
+			return $this->addError('The ' . $field . ' not is serialize data.');
 		}
 		if (false === swoole_unserialize($value)) {
-			return $this->addError('The ' . $this->field . ' not is serialize data.');
+			return $this->addError('The ' . $field . ' not is serialize data.');
 		}
 		return true;
 	}
 
 	/**
+	 * @param $field
 	 * @param $value
 	 * @return bool
 	 */
-	public function arrayFormat($value): bool
+	public function arrayFormat($field, $value): bool
 	{
 		if (!is_array($value)) {
-			return $this->addError('The ' . $this->field . ' not is array data.');
+			return $this->addError('The ' . $field . ' not is array data.');
 		}
 		return true;
 	}
 
 	/**
+	 * @param $field
 	 * @param $value
 	 * @return bool
 	 */
-	public function stringFormat($value): bool
+	public function stringFormat($field, $value): bool
 	{
 		if (is_array($value) || is_object($value) || is_bool($value)) {
-			return $this->addError('The ' . $this->field . ' not is string data.');
+			return $this->addError('The ' . $field . ' not is string data.');
 		}
 		return true;
 	}
 
 	/**
+	 * @param $field
 	 * @param $value
 	 * @return bool
 	 */
-	public function integerFormat($value): bool
+	public function integerFormat($field, $value): bool
 	{
 		if (!is_numeric($value)) {
-			return $this->addError('The ' . $this->field . ' not is number data.');
+			return $this->addError('The ' . $field . ' not is number data.');
 		}
 		if ((int)$value != $value) {
-			return $this->addError('The ' . $this->field . ' not is number data.');
+			return $this->addError('The ' . $field . ' not is number data.');
 		}
 
 		return true;
 	}
 
 	/**
+	 * @param $field
 	 * @param $value
 	 * @return bool
 	 */
-	public function floatFormat($value): bool
+	public function floatFormat($field, $value): bool
 	{
 		$trim = (float)$value;
-		if ($trim != $value || !is_float($trim)) {
-			return $this->addError('The ' . $this->field . ' not is float data.');
+		if ($trim != $value) {
+			return $this->addError('The ' . $field . ' not is float data.');
 		}
 		return true;
 	}

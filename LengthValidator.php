@@ -25,18 +25,21 @@ class LengthValidator extends BaseValidator
 	 */
 	public function trigger(): bool
 	{
-		if (empty($this->params) || !isset($this->params[$this->field])) {
-			if ($this->method != self::MAX_LENGTH) {
-				return $this->addError('The param :attribute not exists');
-			} else {
-				return TRUE;
+		return $this->_validator($this->field, function ($field, $params, $method, $value) {
+			$value = $params[$this->field] ?? null;
+			if (empty($value)) {
+				if ($method != self::MAX_LENGTH) {
+					return $this->addError('The param :attribute not exists');
+				} else {
+					return TRUE;
+				}
 			}
-		}
-		return match (strtolower($this->method)) {
-			self::MAX_LENGTH => $this->maxLength($this->params[$this->field]),
-			self::MIN_LENGTH => $this->minLength($this->params[$this->field]),
-			default => $this->defaultLength($this->params[$this->field]),
-		};
+			return match ($method) {
+				self::MAX_LENGTH => $this->maxLength($value),
+				self::MIN_LENGTH => $this->minLength($value),
+				default => $this->defaultLength($value),
+			};
+		}, $this->params, strtolower($this->method), $this->value);
 	}
 
 	/**

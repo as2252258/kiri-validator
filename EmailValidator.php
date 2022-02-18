@@ -19,14 +19,21 @@ class EmailValidator extends BaseValidator
 	 */
 	public function trigger(): bool
 	{
-		if (empty($this->params) || !isset($this->params[$this->field])) {
-			return true;
-		}
-		if (preg_match('/^[a-zA-Z0-9]+([._]+)[a-zA-Z0-9]+@[a-zA-Z]+(\.\w+)+/', $this->params[$this->field])) {
-			return true;
-		} else {
+		return $this->_validator($this->field, function ($field, $params) {
+			$value = $params[$field] ?? null;
+			if (empty($value)) {
+				return true;
+			}
+			$exp = "^[a-z\'0-9]+([._-][a-z\'0-9]+)*@([a-z0-9]+([._-][a-z0-9]+))+$";
+			if (!preg_match($exp, $value)) {
+				return $this->addError('The param :attribute format error');
+			}
+			[$account, $domain] = explode("@", $value);
+			if (checkdnsrr($domain, "MX")) {
+				return true;
+			}
 			return $this->addError('The param :attribute format error');
-		}
+		}, $this->params);
 	}
 
 }

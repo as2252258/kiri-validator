@@ -20,21 +20,22 @@ class UniqueValidator extends BaseValidator
 	 */
 	public function trigger(): bool
 	{
-		$param = $this->getParams();
-		if (empty($param) || !isset($param[$this->field])) {
-			return TRUE;
-		}
-
-		if (empty($this->model)) {
+		if (empty($model)) {
 			return $this->addError('Model error.');
 		}
-		if (!$this->model->getIsNowExample()) {
+		if (!$model->getIsNowExample()) {
 			return true;
 		}
-		if ($this->model::query()->where([$this->field => $param[$this->field]])->exists()) {
-			return $this->addError('The :attribute \'' . $param[$this->field] . '\' is exists!');
-		}
-		return $this->isFail = TRUE;
+		return $this->_validator($this->field, function ($field, $params, $model) {
+			if (!isset($params[$field])) {
+				return true;
+			}
+			$param = $params[$field];
+			if ($model::query()->where([$field => $param])->exists()) {
+				return $this->addError('The :attribute \'' . $param . '\' is exists!');
+			}
+			return $this->isFail = TRUE;
+		}, $this->params, $this->model);
 	}
 
 

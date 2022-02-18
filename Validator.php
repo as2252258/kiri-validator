@@ -132,9 +132,8 @@ class Validator extends BaseValidator
 
 		$param = $this->getParams();
 		$model = $this->getModel();
-		foreach ($field as $val) {
-			$this->createRule($val, $rules, $model, $param);
-		}
+
+		$this->createRule($field, $rules, $model, $param);
 
 		return $this;
 	}

@@ -19,11 +19,13 @@ class RequiredValidator extends BaseValidator
 	 */
 	public function trigger(): bool
 	{
-		if (!isset($this->params[$this->field])) {
-			return $this->addError('The param :attribute not exists');
-		} else {
-			return true;
-		}
+		return $this->_validator($this->field, function ($field, $params) {
+			if (!isset($params[$field])) {
+				return $this->addError('The param :attribute not exists');
+			} else {
+				return true;
+			}
+		});
 	}
 
 }

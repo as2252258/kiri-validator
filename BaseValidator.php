@@ -110,6 +110,27 @@ abstract class BaseValidator
 		return $this->isFail;
 	}
 
+
+	/**
+	 * @param string|array $fields
+	 * @param callable $callback
+	 * @param ...$params
+	 * @return bool
+	 */
+	protected function _validator(string|array $fields, callable $callback, ...$params): bool
+	{
+		if (is_string($fields)) {
+			$fields = [$fields];
+		}
+		foreach ($fields as $field) {
+			if (!$callback($field, ...$params)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+
 	/**
 	 * @return string
 	 */

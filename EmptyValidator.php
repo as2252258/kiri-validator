@@ -14,15 +14,15 @@ namespace validator;
 
 class EmptyValidator extends BaseValidator
 {
-	
+
 	/** @var string [不能为空] */
 	const CAN_NOT_EMPTY = 'not empty';
-	
+
 	/** @var string [可为空, 不能为null] */
 	const CAN_NOT_NULL = 'not null';
 
 	public string $method;
-	
+
 	/**
 	 * @return bool
 	 *
@@ -30,21 +30,15 @@ class EmptyValidator extends BaseValidator
 	 */
 	public function trigger(): bool
 	{
-		if (empty($this->params) || !isset($this->params[$this->field])) {
-			return $this->addError(':attribute not exists');
-		}
-		switch (strtolower($this->method)) {
-			case self::CAN_NOT_EMPTY:
-				if (strlen($this->params[$this->field]) < 1) {
-					return $this->addError('The :attribute can not empty.');
-				}
-				break;
-			case self::CAN_NOT_NULL:
-				if ($this->params[$this->field] === null) {
-					return $this->addError('The :attribute can not is null.');
-				}
-				break;
-		}
-		return true;
+		return $this->_validator($this->field, function ($field, $params, $method) {
+			$value = $params[$field] ?? null;
+			if (empty($value)) {
+				return $this->addError(':attribute not exists');
+			}
+			return match ($method) {
+				self::CAN_NOT_EMPTY => isset($value[1]) || $this->addError('The :attribute can not empty.'),
+				default => $value !== null || $this->addError('The :attribute can not empty.')
+			};
+		}, $this->params, strtolower($this->method));
 	}
 }

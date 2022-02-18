@@ -24,15 +24,18 @@ class IntegerValidator extends BaseValidator
 	 */
 	public function trigger(): bool
 	{
-		if (empty($this->params) || !isset($this->params[$this->field])) {
+		return $this->_validator($this->field, function ($field, $params, $origin, $type) {
+			$value = $params[$field] ?? null;
+			if (empty($value)) {
+				return true;
+			}
+			if ($type !== self::MIN && $value < $origin) {
+				return $this->addError('The ' . $field . ' cannot be less than the default value.');
+			}
+			if ($type !== self::MAX && $value > $origin) {
+				return $this->addError('The ' . $field . ' cannot be greater than the default value.');
+			}
 			return true;
-		}
-		if ($this->type !== self::MIN && $this->params[$this->field] < $this->value) {
-			return $this->addError('The ' . $this->field . ' cannot be less than the default value.');
-		}
-		if ($this->type !== self::MAX && $this->params[$this->field] > $this->value) {
-			return $this->addError('The ' . $this->field . ' cannot be greater than the default value.');
-		}
-		return true;
+		}, $this->params, $this->value, $this->type);
 	}
 }
