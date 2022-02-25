@@ -103,7 +103,9 @@ abstract class BaseValidator
 	{
 		$this->isFail = FALSE;
 
-		$message = str_replace(':attribute', $field, $message);
+		if (!is_null($field)) {
+			$message = str_replace(':attribute', $field, $message);
+		}
 
 		$this->message = $message;
 
