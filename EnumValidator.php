@@ -22,10 +22,10 @@ class EnumValidator extends BaseValidator
 		return $this->_validator($this->field, function ($field, $params, $values) {
 			$value = $params[$field] ?? null;
 			if (empty($value)) {
-				return $this->addError('The param :attribute is null');
+				return $this->addError($field,'The param :attribute is null');
 			}
 			if (!in_array($value, $values)) {
-				return $this->addError('The param :attribute value only in ' . implode(',', $values));
+				return $this->addError($field,'The param :attribute value only in ' . implode(',', $values));
 			}
 			return true;
 		}, $this->params, $this->value);

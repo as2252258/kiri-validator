@@ -30,7 +30,7 @@ class ArrayValidator extends BaseValidator
 				return true;
 			}
 			if (!is_array($value)) {
-				return $this->addError('The param :attribute must a array');
+				return $this->addError($field, 'The param :attribute must a array');
 			}
 			return true;
 		}, $this->params);

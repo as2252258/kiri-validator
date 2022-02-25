@@ -52,7 +52,7 @@ class TypesOfValidator extends BaseValidator
 			}
 			$value = $params[$field] ?? null;
 			if (empty($value)) {
-				return $this->addError('This ' . $field . ' is not an empty data.');
+				return $this->addError($field, 'This ' . $field . ' is not an empty data.');
 			}
 			return $this->{$method . 'Format'}($field, $value);
 		}, $this->params, $this->method, $this->types);
@@ -66,10 +66,10 @@ class TypesOfValidator extends BaseValidator
 	public function jsonFormat($field, $value): bool
 	{
 		if (!is_string($value) || is_numeric($value)) {
-			return $this->addError('The ' . $field . ' not is JSON data.');
+			return $this->addError($field, 'The ' . $field . ' not is JSON data.');
 		}
 		if (is_null(json_decode($value))) {
-			return $this->addError('The ' . $field . ' not is JSON data.');
+			return $this->addError($field, 'The ' . $field . ' not is JSON data.');
 		}
 		return true;
 	}
@@ -82,10 +82,10 @@ class TypesOfValidator extends BaseValidator
 	public function serializeFormat($field, $value): bool
 	{
 		if (!is_string($value) || is_numeric($value)) {
-			return $this->addError('The ' . $field . ' not is serialize data.');
+			return $this->addError($field, 'The ' . $field . ' not is serialize data.');
 		}
 		if (false === swoole_unserialize($value)) {
-			return $this->addError('The ' . $field . ' not is serialize data.');
+			return $this->addError($field, 'The ' . $field . ' not is serialize data.');
 		}
 		return true;
 	}
@@ -98,7 +98,7 @@ class TypesOfValidator extends BaseValidator
 	public function arrayFormat($field, $value): bool
 	{
 		if (!is_array($value)) {
-			return $this->addError('The ' . $field . ' not is array data.');
+			return $this->addError($field, 'The ' . $field . ' not is array data.');
 		}
 		return true;
 	}
@@ -111,7 +111,7 @@ class TypesOfValidator extends BaseValidator
 	public function stringFormat($field, $value): bool
 	{
 		if (is_array($value) || is_object($value) || is_bool($value)) {
-			return $this->addError('The ' . $field . ' not is string data.');
+			return $this->addError($field, 'The ' . $field . ' not is string data.');
 		}
 		return true;
 	}
@@ -124,10 +124,10 @@ class TypesOfValidator extends BaseValidator
 	public function integerFormat($field, $value): bool
 	{
 		if (!is_numeric($value)) {
-			return $this->addError('The ' . $field . ' not is number data.');
+			return $this->addError($field, 'The ' . $field . ' not is number data.');
 		}
 		if ((int)$value != $value) {
-			return $this->addError('The ' . $field . ' not is number data.');
+			return $this->addError($field, 'The ' . $field . ' not is number data.');
 		}
 
 		return true;
@@ -142,7 +142,7 @@ class TypesOfValidator extends BaseValidator
 	{
 		$trim = (float)$value;
 		if ($trim != $value) {
-			return $this->addError('The ' . $field . ' not is float data.');
+			return $this->addError($field, 'The ' . $field . ' not is float data.');
 		}
 		return true;
 	}

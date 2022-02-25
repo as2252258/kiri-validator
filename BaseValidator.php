@@ -99,11 +99,11 @@ abstract class BaseValidator
 	 * @param $message
 	 * @return bool
 	 */
-	public function addError($message): bool
+	public function addError($field, $message): bool
 	{
 		$this->isFail = FALSE;
 
-		$message = str_replace(':attribute', $this->field, $message);
+		$message = str_replace(':attribute', $field, $message);
 
 		$this->message = $message;
 

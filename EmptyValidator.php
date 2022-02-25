@@ -33,11 +33,11 @@ class EmptyValidator extends BaseValidator
 		return $this->_validator($this->field, function ($field, $params, $method) {
 			$value = $params[$field] ?? null;
 			if (empty($value)) {
-				return $this->addError(':attribute not exists');
+				return $this->addError($field,':attribute not exists');
 			}
 			return match ($method) {
-				self::CAN_NOT_EMPTY => isset($value[1]) || $this->addError('The :attribute can not empty.'),
-				default => $value !== null || $this->addError('The :attribute can not empty.')
+				self::CAN_NOT_EMPTY => isset($value[1]) || $this->addError($field,'The :attribute can not empty.'),
+				default => $value !== null || $this->addError($field,'The :attribute can not empty.')
 			};
 		}, $this->params, strtolower($this->method));
 	}

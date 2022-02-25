@@ -29,15 +29,15 @@ class LengthValidator extends BaseValidator
 			$value = $params[$this->field] ?? null;
 			if (empty($value)) {
 				if ($method != self::MAX_LENGTH) {
-					return $this->addError('The param :attribute not exists');
+					return $this->addError($field, 'The param :attribute not exists');
 				} else {
 					return TRUE;
 				}
 			}
 			return match ($method) {
-				self::MAX_LENGTH => $this->maxLength($value),
-				self::MIN_LENGTH => $this->minLength($value),
-				default => $this->defaultLength($value),
+				self::MAX_LENGTH => $this->maxLength($field, $value),
+				self::MIN_LENGTH => $this->minLength($field, $value),
+				default => $this->defaultLength($field, $value),
 			};
 		}, $this->params, strtolower($this->method), $this->value);
 	}
@@ -48,18 +48,18 @@ class LengthValidator extends BaseValidator
 	 *
 	 * 效验长度是否大于最大长度
 	 */
-	private function maxLength($value): bool
+	private function maxLength($field, $value): bool
 	{
 		if (is_array($value)) {
 			if (count($value) > $value) {
-				return $this->addError('The param :attribute length overflow');
+				return $this->addError($field, 'The param :attribute length overflow');
 			}
 		} else {
 			if (is_numeric($value) && strlen((string)$value) > $this->value) {
-				return $this->addError('The param :attribute length overflow');
+				return $this->addError($field, 'The param :attribute length overflow');
 			}
 			if (strlen($value) > $this->value) {
-				return $this->addError('The param :attribute length overflow');
+				return $this->addError($field, 'The param :attribute length overflow');
 			}
 		}
 		return TRUE;
@@ -71,18 +71,18 @@ class LengthValidator extends BaseValidator
 	 *
 	 * 效验长度是否小于最小长度
 	 */
-	private function minLength($value): bool
+	private function minLength($field, $value): bool
 	{
 		if (is_array($value)) {
 			if (count($value) < $value) {
-				return $this->addError('The param :attribute length error');
+				return $this->addError($field, 'The param :attribute length error');
 			}
 		} else {
 			if (is_numeric($value) && strlen((string)$value) < $this->value) {
-				return $this->addError('The param :attribute length overflow');
+				return $this->addError($field, 'The param :attribute length overflow');
 			}
 			if (strlen($value) < $this->value) {
-				return $this->addError('The param :attribute length error');
+				return $this->addError($field, 'The param :attribute length error');
 			}
 		}
 		return TRUE;
@@ -94,18 +94,18 @@ class LengthValidator extends BaseValidator
 	 *
 	 * 效验长度是否小于最小长度
 	 */
-	private function defaultLength($value): bool
+	private function defaultLength($field, $value): bool
 	{
 		if (is_array($value)) {
 			if (count($value) !== $value) {
-				return $this->addError('The param :attribute length error');
+				return $this->addError($field, 'The param :attribute length error');
 			}
 		} else {
 			if (is_numeric($value) && strlen((string)$value) !== $this->value) {
-				return $this->addError('The param :attribute length overflow');
+				return $this->addError($field, 'The param :attribute length overflow');
 			}
 			if (mb_strlen($value) !== $this->value) {
-				return $this->addError('The param :attribute length error; ' . mb_strlen($value) . ':' . $this->value);
+				return $this->addError($field, 'The param :attribute length error; ' . mb_strlen($value) . ':' . $this->value);
 			}
 		}
 		return TRUE;

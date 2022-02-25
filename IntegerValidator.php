@@ -30,10 +30,10 @@ class IntegerValidator extends BaseValidator
 				return true;
 			}
 			if ($type !== self::MIN && $value < $origin) {
-				return $this->addError('The ' . $field . ' cannot be less than the default value.');
+				return $this->addError($field,'The ' . $field . ' cannot be less than the default value.');
 			}
 			if ($type !== self::MAX && $value > $origin) {
-				return $this->addError('The ' . $field . ' cannot be greater than the default value.');
+				return $this->addError($field,'The ' . $field . ' cannot be greater than the default value.');
 			}
 			return true;
 		}, $this->params, $this->value, $this->type);
