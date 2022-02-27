@@ -43,6 +43,7 @@ class LengthValidator extends BaseValidator
 	}
 
 	/**
+	 * @param $field
 	 * @param $value
 	 * @return bool
 	 *
@@ -66,6 +67,7 @@ class LengthValidator extends BaseValidator
 	}
 
 	/**
+	 * @param $field
 	 * @param $value
 	 * @return bool
 	 *
@@ -89,6 +91,7 @@ class LengthValidator extends BaseValidator
 	}
 
 	/**
+	 * @param $field
 	 * @param $value
 	 * @return bool
 	 *
