@@ -21,7 +21,7 @@ class EnumValidator extends BaseValidator
 	{
 		return $this->_validator($this->field, function ($field, $params, $values) {
 			$value = $params[$field] ?? null;
-			if (empty($value)) {
+			if (is_null($value) || $value === '') {
 				return $this->addError($field,'The param :attribute is null');
 			}
 			if (!in_array($value, $values)) {
