@@ -20,11 +20,7 @@ class EnumValidator extends BaseValidator
 	public function trigger(): bool
 	{
 		return $this->_validator($this->field, function ($field, $params, $values) {
-			$value = $params[$field] ?? null;
-			if (is_null($value) || $value === '') {
-				return $this->addError($field,'The param :attribute is null');
-			}
-			if (!in_array($value, $values)) {
+			if (!in_array($params[$field] ?? null, $values)) {
 				return $this->addError($field,'The param :attribute value only in ' . implode(',', $values));
 			}
 			return true;
