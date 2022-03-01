@@ -25,7 +25,7 @@ class RequiredValidator extends BaseValidator
 			} else {
 				return true;
 			}
-		});
+		}, $this->params);
 	}
 
 }
