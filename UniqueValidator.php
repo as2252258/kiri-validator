@@ -26,13 +26,18 @@ class UniqueValidator extends BaseValidator
 		if (!$this->model->getIsNowExample()) {
 			return true;
 		}
-		return $this->_validator($this->field, function ($field, $params, $model) {
-			if (!isset($params[$field])) {
-				return true;
+		return $this->_validator($this->field, function ($_item, $params, $model) {
+			if (!is_array($_item)) {
+				$_item = [$_item];
 			}
-			$param = $params[$field];
-			if ($model::query()->where([$field => $param])->exists()) {
-				return $this->addError($field,'The :attribute \'' . $param . '\' is exists!');
+			$data = array_reduce($_item, function ($resp, $next) use ($params) {
+				$array = empty($resp) ? [] : $resp;
+				$array[$next] = $params[$next] ?? null;
+				return $array;
+			});
+			if ($model::query()->where($data)->exists()) {
+				return $this->addError(implode(',', $_item),
+					'The :attribute \'' . implode(',', $_item) . '\' is exists!');
 			}
 			return $this->isFail = TRUE;
 		}, $this->params, $this->model);
