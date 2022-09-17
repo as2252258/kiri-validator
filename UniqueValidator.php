@@ -20,10 +20,10 @@ class UniqueValidator extends BaseValidator
 	 */
 	public function trigger(): bool
 	{
-		if (empty($model)) {
+		if (empty($this->model)) {
 			return $this->addError('model','Model error.');
 		}
-		if (!$model->getIsNowExample()) {
+		if (!$this->model->getIsNowExample()) {
 			return true;
 		}
 		return $this->_validator($this->field, function ($field, $params, $model) {
