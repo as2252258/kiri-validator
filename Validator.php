@@ -6,6 +6,7 @@ namespace validator;
 
 
 use Closure;
+use Database\ModelInterface;
 use Exception;
 use Kiri;
 
@@ -115,6 +116,22 @@ class Validator extends BaseValidator
 		if (static::$instance == null) {
 			static::$instance = new Validator();
 		}
+		return static::$instance;
+	}
+
+
+	/**
+	 * @param array $params
+	 * @param ModelInterface $model
+	 * @return Validator
+	 */
+	public static function instance(array $params, ModelInterface $model): static
+	{
+		if (static::$instance == null) {
+			static::$instance = new Validator();
+		}
+		static::$instance->setParams($params);
+		static::$instance->setModel($model);
 		return static::$instance;
 	}
 

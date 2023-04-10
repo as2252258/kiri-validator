@@ -83,14 +83,11 @@ abstract class BaseValidator
 	}
 
 	/**
-	 * @param array|null $data
+	 * @param array $data
 	 * @return $this
 	 */
-	public function setParams(?array $data): static
+	public function setParams(array $data): static
 	{
-		if (is_null($data)) {
-			$data = [];
-		}
 		$this->params = $data;
 		return $this;
 	}
