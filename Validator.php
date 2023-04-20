@@ -127,12 +127,13 @@ class Validator extends BaseValidator
 	 */
 	public static function instance(array $params, ModelInterface $model): static
 	{
-		if (static::$instance == null) {
-			static::$instance = new Validator();
+		$validator = static::$instance;
+		if ($validator == null) {
+			$validator = static::$instance = new Validator();
 		}
-		static::$instance->setParams($params);
-		static::$instance->setModel($model);
-		return static::$instance;
+		$validator->setParams($params);
+		$validator->setModel($model);
+		return $validator;
 	}
 
 	/**
