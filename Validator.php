@@ -163,18 +163,10 @@ class Validator extends BaseValidator
 	 * @throws Exception
 	 * ['maxLength'=>150, 'required', 'minLength' => 100]
 	 */
-	public function createRule($field, $rule, $model, $param)
+	public function createRule($field, $rule, $model, $param): void
 	{
 		$define = ['field' => $field];
-
-		$is_model = is_null($model);
 		foreach ($rule as $key => $val) {
-			if (!$is_model) {
-				if (is_string($val) && method_exists($model, $val)) {
-					$this->validators[] = [$model, $val];
-					continue;
-				}
-			}
 			if (is_string($key)) {
 				$type = strtolower($key);
 				$define['value'] = $val;
@@ -182,12 +174,14 @@ class Validator extends BaseValidator
 				$type = strtolower($val);
 			}
 			if (!isset($this->classMap[$type])) {
-				continue;
+				$this->validators[] = [$model, $val];
+			} else {
+				$merge = array_merge($this->classMap[$type], $define, [
+					'params' => $param,
+					'model'  => $model
+				]);
+				$this->validators[] = $merge;
 			}
-			$this->validators[] = array_merge($this->classMap[$type], $define, [
-				'params' => $param,
-				'model'  => $model
-			]);
 		}
 	}
 

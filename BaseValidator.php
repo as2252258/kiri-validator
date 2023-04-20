@@ -28,7 +28,7 @@ abstract class BaseValidator
 	/**
 	 * @param $model
 	 */
-	public function setModel($model)
+	public function setModel($model): void
 	{
 		$this->model = $model;
 	}
@@ -55,9 +55,9 @@ abstract class BaseValidator
 	/**
 	 * @param $config
 	 */
-	private function regConfig($config)
+	private function regConfig($config): void
 	{
-		if (empty($config) || !is_array($config)) {
+		if (count($config) < 1) {
 			return;
 		}
 		foreach ($config as $key => $val) {
@@ -93,6 +93,7 @@ abstract class BaseValidator
 	}
 
 	/**
+	 * @param $field
 	 * @param $message
 	 * @return bool
 	 */
