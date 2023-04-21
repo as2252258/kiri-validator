@@ -25,8 +25,8 @@ class LengthValidator extends BaseValidator
 	 */
 	public function trigger(): bool
 	{
-		return $this->_validator($this->field, function ($field, $params, $method, $value) {
-			$value = $params[$this->field] ?? null;
+		return $this->_validator($this->field, function ($field, $params, $method, $length) {
+			$value = $params[$field] ?? null;
 			if (empty($value)) {
 				if ($method != self::MAX_LENGTH) {
 					return $this->addError($field, 'The param :attribute not exists');
