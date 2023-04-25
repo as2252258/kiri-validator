@@ -87,11 +87,11 @@ class Validator extends BaseValidator
 			'class'  => 'validator\TypesOfValidator',
 			'method' => TypesOfValidator::SERIALIZE,
 		],
-		'maxLength' => [
+		'maxlength' => [
 			'class'  => 'validator\LengthValidator',
 			'method' => 'max',
 		],
-		'minLength' => [
+		'minlength' => [
 			'class'  => 'validator\LengthValidator',
 			'method' => 'min',
 		],

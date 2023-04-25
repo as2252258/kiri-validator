@@ -35,9 +35,9 @@ class LengthValidator extends BaseValidator
 				}
 			}
 			return match ($method) {
-				self::MAX_LENGTH => $this->maxLength($field, $value),
-				self::MIN_LENGTH => $this->minLength($field, $value),
-				default => $this->defaultLength($field, $value),
+				self::MAX_LENGTH => $this->maxLength($field, (string)$value),
+				self::MIN_LENGTH => $this->minLength($field, (string)$value),
+				default => $this->defaultLength($field, (string)$value),
 			};
 		}, $this->params, strtolower($this->method), $this->value);
 	}
