@@ -92,11 +92,12 @@ abstract class BaseValidator
 		return $this;
 	}
 
-	/**
-	 * @param $field
-	 * @param $message
-	 * @return bool
-	 */
+    /**
+     * @param $field
+     * @param $message
+     * @return bool
+     * @throws \ReflectionException
+     */
 	public function addError($field, $message): bool
 	{
 		$this->isFail = FALSE;
@@ -105,6 +106,7 @@ abstract class BaseValidator
 			$message = str_replace(':attribute', $field, $message);
 		}
 
+        \addError($message,"mysql");
 		$this->message = $message;
 
 		return $this->isFail;
