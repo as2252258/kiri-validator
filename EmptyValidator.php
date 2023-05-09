@@ -23,11 +23,12 @@ class EmptyValidator extends BaseValidator
 
 	public string $method;
 
-	/**
-	 * @return bool
-	 *
-	 * 检查参数是否为NULL
-	 */
+    /**
+     * @return bool
+     *
+     * 检查参数是否为NULL
+     * @throws \ReflectionException
+     */
 	public function trigger(): bool
 	{
 		return $this->_validator($this->field, function ($field, $params, $method) {

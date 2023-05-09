@@ -14,9 +14,10 @@ class EnumValidator extends BaseValidator
 
 	public array $value = [];
 
-	/**
-	 * @return bool
-	 */
+    /**
+     * @return bool
+     * @throws \ReflectionException
+     */
 	public function trigger(): bool
 	{
 		return $this->_validator($this->field, function ($field, $params, $values) {
