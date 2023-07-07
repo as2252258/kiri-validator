@@ -29,9 +29,6 @@ class ArrayValidator extends BaseValidator
 	{
 		return $this->_validator($this->field, function ($field, $params) {
 			$value = $params[$field] ?? null;
-			if (empty($value)) {
-				return true;
-			}
 			if (!is_array($value)) {
 				return $this->addError($field, 'The param :attribute must a array');
 			}

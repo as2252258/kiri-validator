@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace validator;
 
 
+use ReflectionException;
+
 class LengthValidator extends BaseValidator
 {
 
@@ -20,20 +22,14 @@ class LengthValidator extends BaseValidator
 
 	public int $value;
 
-	/**
-	 * @return bool
-	 */
+    /**
+     * @return bool
+     * @throws ReflectionException
+     */
 	public function trigger(): bool
 	{
 		return $this->_validator($this->field, function ($field, $params, $method, $length) {
 			$value = $params[$field] ?? null;
-			if (empty($value)) {
-				if ($method != self::MAX_LENGTH) {
-					return $this->addError($field, 'The param :attribute not exists');
-				} else {
-					return TRUE;
-				}
-			}
 			return match ($method) {
 				self::MAX_LENGTH => $this->maxLength($field, (string)$value),
 				self::MIN_LENGTH => $this->minLength($field, (string)$value),
@@ -42,13 +38,14 @@ class LengthValidator extends BaseValidator
 		}, $this->params, strtolower($this->method), $this->value);
 	}
 
-	/**
-	 * @param $field
-	 * @param $value
-	 * @return bool
-	 *
-	 * 效验长度是否大于最大长度
-	 */
+    /**
+     * @param $field
+     * @param $value
+     * @return bool
+     *
+     * 效验长度是否大于最大长度
+     * @throws ReflectionException
+     */
 	private function maxLength($field, $value): bool
 	{
 		if (is_array($value)) {
@@ -66,13 +63,14 @@ class LengthValidator extends BaseValidator
 		return TRUE;
 	}
 
-	/**
-	 * @param $field
-	 * @param $value
-	 * @return bool
-	 *
-	 * 效验长度是否小于最小长度
-	 */
+    /**
+     * @param $field
+     * @param $value
+     * @return bool
+     *
+     * 效验长度是否小于最小长度
+     * @throws ReflectionException
+     */
 	private function minLength($field, $value): bool
 	{
 		if (is_array($value)) {
@@ -90,13 +88,14 @@ class LengthValidator extends BaseValidator
 		return TRUE;
 	}
 
-	/**
-	 * @param $field
-	 * @param $value
-	 * @return bool
-	 *
-	 * 效验长度是否小于最小长度
-	 */
+    /**
+     * @param $field
+     * @param $value
+     * @return bool
+     *
+     * 效验长度是否小于最小长度
+     * @throws ReflectionException
+     */
 	private function defaultLength($field, $value): bool
 	{
 		if (is_array($value)) {

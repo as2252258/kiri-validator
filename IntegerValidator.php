@@ -19,16 +19,14 @@ class IntegerValidator extends BaseValidator
 	public ?int $value = null;
 	private string $type = '';
 
-	/**
-	 * @return bool
-	 */
+    /**
+     * @return bool
+     * @throws \ReflectionException
+     */
 	public function trigger(): bool
 	{
 		return $this->_validator($this->field, function ($field, $params, $origin, $type) {
 			$value = $params[$field] ?? null;
-			if (empty($value)) {
-				return true;
-			}
 			if ($type !== self::MIN && $value < $origin) {
 				return $this->addError($field,'The ' . $field . ' cannot be less than the default value.');
 			}

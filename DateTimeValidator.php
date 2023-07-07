@@ -27,9 +27,6 @@ class DateTimeValidator extends BaseValidator
 	{
 		return $this->_validator($this->field, function ($field, $params, $method) {
 			$value = $params[$field] ?? null;
-			if (empty($value)) {
-				return true;
-			}
 			return match ($method) {
 				self::DATE => $this->validatorDate($field, $value),
 				self::DATE_TIME => $this->validateDatetime($field, $value),

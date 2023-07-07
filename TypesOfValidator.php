@@ -48,50 +48,45 @@ class TypesOfValidator extends BaseValidator
 				return true;
 			}
 			$value = $params[$field] ?? null;
-			if (is_null($value)) {
-				return true;
-			}
+
 			return $this->{$method . 'Format'}($field, $value);
 		}, $this->params, $this->method, $this->types);
 	}
 
-	/**
-	 * @param $field
-	 * @param $value
-	 * @return bool
-	 */
+    /**
+     * @param $field
+     * @param $value
+     * @return bool
+     * @throws \ReflectionException
+     */
 	public function jsonFormat($field, $value): bool
 	{
-		if (!is_string($value) || is_numeric($value)) {
-			return $this->addError($field, 'The ' . $field . ' not is JSON data.');
-		}
 		if (is_null(json_decode($value))) {
 			return $this->addError($field, 'The ' . $field . ' not is JSON data.');
 		}
 		return true;
 	}
 
-	/**
-	 * @param $field
-	 * @param $value
-	 * @return bool
-	 */
+    /**
+     * @param $field
+     * @param $value
+     * @return bool
+     * @throws \ReflectionException
+     */
 	public function serializeFormat($field, $value): bool
 	{
-		if (!is_string($value) || is_numeric($value)) {
-			return $this->addError($field, 'The ' . $field . ' not is serialize data.');
-		}
-		if (false === swoole_unserialize($value)) {
+		if (false === unserialize($value)) {
 			return $this->addError($field, 'The ' . $field . ' not is serialize data.');
 		}
 		return true;
 	}
 
-	/**
-	 * @param $field
-	 * @param $value
-	 * @return bool
-	 */
+    /**
+     * @param $field
+     * @param $value
+     * @return bool
+     * @throws \ReflectionException
+     */
 	public function arrayFormat($field, $value): bool
 	{
 		if (!is_array($value)) {
@@ -100,41 +95,40 @@ class TypesOfValidator extends BaseValidator
 		return true;
 	}
 
-	/**
-	 * @param $field
-	 * @param $value
-	 * @return bool
-	 */
+    /**
+     * @param $field
+     * @param $value
+     * @return bool
+     * @throws \ReflectionException
+     */
 	public function stringFormat($field, $value): bool
 	{
-		if (is_array($value) || is_object($value) || is_bool($value)) {
+        if (!is_string($value)) {
 			return $this->addError($field, 'The ' . $field . ' not is string data.');
 		}
 		return true;
 	}
 
-	/**
-	 * @param $field
-	 * @param $value
-	 * @return bool
-	 */
+    /**
+     * @param $field
+     * @param $value
+     * @return bool
+     * @throws \ReflectionException
+     */
 	public function integerFormat($field, $value): bool
 	{
-		if (!is_numeric($value)) {
-			return $this->addError($field, 'The ' . $field . ' not is number data.');
-		}
 		if ((int)$value != $value) {
 			return $this->addError($field, 'The ' . $field . ' not is number data.');
 		}
-
 		return true;
 	}
 
-	/**
-	 * @param $field
-	 * @param $value
-	 * @return bool
-	 */
+    /**
+     * @param $field
+     * @param $value
+     * @return bool
+     * @throws \ReflectionException
+     */
 	public function floatFormat($field, $value): bool
 	{
 		$trim = (float)$value;

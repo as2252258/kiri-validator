@@ -13,10 +13,11 @@ namespace validator;
 class RequiredValidator extends BaseValidator
 {
 
-	/**
-	 * @return bool
-	 * 检查是否存在
-	 */
+    /**
+     * @return bool
+     * 检查是否存在
+     * @throws \ReflectionException
+     */
 	public function trigger(): bool
 	{
 		return $this->_validator($this->field, function ($field, $params) {
