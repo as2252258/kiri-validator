@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace validator;
 
 
+use ReflectionException;
+
 class EmptyValidator extends BaseValidator
 {
 
@@ -27,7 +29,7 @@ class EmptyValidator extends BaseValidator
      * @return bool
      *
      * 检查参数是否为NULL
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function trigger(): bool
     {
