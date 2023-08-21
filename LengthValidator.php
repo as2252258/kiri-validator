@@ -44,7 +44,6 @@ class LengthValidator extends BaseValidator
      * @return bool
      *
      * 效验长度是否大于最大长度
-     * @throws ReflectionException
      */
 	private function maxLength($field, $value): bool
 	{
@@ -69,7 +68,6 @@ class LengthValidator extends BaseValidator
      * @return bool
      *
      * 效验长度是否小于最小长度
-     * @throws ReflectionException
      */
 	private function minLength($field, $value): bool
 	{
@@ -94,7 +92,6 @@ class LengthValidator extends BaseValidator
      * @return bool
      *
      * 效验长度是否小于最小长度
-     * @throws ReflectionException
      */
 	private function defaultLength($field, $value): bool
 	{
