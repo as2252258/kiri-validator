@@ -67,10 +67,6 @@ trait RuleTrait
             'class'  => TypesOfValidator::class,
             'method' => TypesOfValidator::ARRAY,
         ],
-        'serialize' => [
-            'class'  => TypesOfValidator::class,
-            'method' => TypesOfValidator::SERIALIZE,
-        ],
         'maxlength' => [
             'class'  => LengthValidator::class,
             'method' => 'max',
