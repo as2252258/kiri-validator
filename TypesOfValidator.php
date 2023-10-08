@@ -63,7 +63,7 @@ class TypesOfValidator extends BaseValidator
      */
     public function jsonFormat($field, $value): bool
     {
-        if (is_null(json_decode($value))) {
+        if (!is_string($value) || is_null(json_decode($value))) {
             return $this->addError($field, 'The ' . $field . ' not is JSON data.');
         }
         return true;
