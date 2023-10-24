@@ -10,6 +10,9 @@ declare(strict_types=1);
 namespace validator;
 
 
+/**
+ *
+ */
 class IntegerValidator extends BaseValidator
 {
 
@@ -21,7 +24,6 @@ class IntegerValidator extends BaseValidator
 
     /**
      * @return bool
-     * @throws \ReflectionException
      */
 	public function trigger(): bool
 	{

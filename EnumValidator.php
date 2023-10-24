@@ -16,7 +16,6 @@ class EnumValidator extends BaseValidator
 
     /**
      * @return bool
-     * @throws \ReflectionException
      */
     public function trigger(): bool
     {

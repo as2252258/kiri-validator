@@ -10,8 +10,6 @@ declare(strict_types=1);
 namespace validator;
 
 
-use ReflectionException;
-
 class LengthValidator extends BaseValidator
 {
 
@@ -24,7 +22,6 @@ class LengthValidator extends BaseValidator
 
     /**
      * @return bool
-     * @throws ReflectionException
      */
 	public function trigger(): bool
 	{

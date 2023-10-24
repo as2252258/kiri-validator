@@ -7,6 +7,10 @@ namespace validator;
 use Database\Model;
 use Exception;
 
+
+/**
+ * Class \validator\BaseValidator
+ */
 abstract class BaseValidator
 {
 

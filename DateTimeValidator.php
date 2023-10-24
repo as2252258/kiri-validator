@@ -39,12 +39,13 @@ class DateTimeValidator extends BaseValidator
 
 	}
 
-	/**
-	 * @param $value
-	 * @return bool
-	 *
-	 * 效验分秒 格式如  01:02 or 01-02
-	 */
+    /**
+     * @param $field
+     * @param $value
+     * @return bool
+     *
+     * 效验分秒 格式如  01:02 or 01-02
+     */
 	public function validatorTime($field, $value): bool
 	{
 		if (!is_string($value)) {
@@ -59,12 +60,13 @@ class DateTimeValidator extends BaseValidator
 	}
 
 
-	/**
-	 * @param $value
-	 * @return bool
-	 *
-	 * 效验分秒 格式如 2017-12-22 01:02
-	 */
+    /**
+     * @param $field
+     * @param $value
+     * @return bool
+     *
+     * 效验分秒 格式如 2017-12-22 01:02
+     */
 	public function validateDatetime($field, $value): bool
 	{
 		if (!is_string($value)) {
@@ -79,12 +81,13 @@ class DateTimeValidator extends BaseValidator
 		}
 	}
 
-	/**
-	 * @param $value
-	 * @return bool
-	 *
-	 * 效验分秒 格式如  2017-12-22
-	 */
+    /**
+     * @param $field
+     * @param $value
+     * @return bool
+     *
+     * 效验分秒 格式如  2017-12-22
+     */
 	public function validatorDate($field, $value): bool
 	{
 		if (!is_string($value)) {
@@ -98,12 +101,13 @@ class DateTimeValidator extends BaseValidator
 		}
 	}
 
-	/**
-	 * @param $value
-	 * @return bool
-	 *
-	 * 效验时间戳 格式如  1521452254
-	 */
+    /**
+     * @param $field
+     * @param $value
+     * @return bool
+     *
+     * 效验时间戳 格式如  1521452254
+     */
 	public function validatorTimestamp($field, $value): bool
 	{
 		if (!is_numeric($value)) {

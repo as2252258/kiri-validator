@@ -112,10 +112,10 @@ class Validator extends BaseValidator
 
     /**
      * @param BaseValidator|array|Closure $val
-     * @return mixed
+     * @return array
      * @throws Exception
      */
-    private function check(BaseValidator|array|Closure $val): mixed
+    private function check(BaseValidator|array|Closure $val): array
     {
         if (is_callable($val, true)) {
             return [call_user_func($val, $this), $val];

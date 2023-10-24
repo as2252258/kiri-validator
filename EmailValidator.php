@@ -9,14 +9,15 @@ declare(strict_types=1);
 
 namespace validator;
 
-
+/**
+ *
+ */
 class EmailValidator extends BaseValidator
 {
 
     /**
      * @return bool
      * 检查是否存在
-     * @throws \ReflectionException
      */
 	public function trigger(): bool
 	{
