@@ -14,11 +14,11 @@ class TypesOfValidator extends BaseValidator
 {
 
 
-    const JSON    = 'json';
-    const FLOAT   = 'float';
-    const ARRAY   = 'array';
-    const STRING  = 'string';
-    const INTEGER = 'integer';
+    const string JSON  = 'json';
+    const string FLOAT = 'float';
+    const string ARRAY  = 'array';
+    const string STRING  = 'string';
+    const string INTEGER = 'integer';
 
     private ?int $min = null;
     private ?int $max = null;

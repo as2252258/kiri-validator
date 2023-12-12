@@ -7,7 +7,6 @@ namespace validator;
 
 use Closure;
 use Database\ModelInterface;
-use Exception;
 use Kiri;
 
 /**
@@ -40,7 +39,7 @@ class Validator extends BaseValidator
      * @param $field
      * @param $rules
      * @return $this
-     * @throws Exception
+     * @throws
      */
     public function make($field, $rules): static
     {
@@ -61,7 +60,7 @@ class Validator extends BaseValidator
      * @param $rule
      * @param $model
      * @param $param
-     * @throws Exception
+     * @throws
      * ['maxLength'=>150, 'required', 'minLength' => 100]
      */
     public function createRule($field, $rule, $model, $param): void
@@ -69,7 +68,7 @@ class Validator extends BaseValidator
         $define = ['field' => $field];
         foreach ($rule as $key => $val) {
             if (is_string($key)) {
-                $type = strtolower($key);
+                $type            = strtolower($key);
                 $define['value'] = $val;
             } else {
                 $type = strtolower($val);
@@ -77,7 +76,7 @@ class Validator extends BaseValidator
             if (!isset($this->classMap[$type])) {
                 $this->validators[] = [$model, $val];
             } else {
-                $merge = array_merge($this->classMap[$type], $define, [
+                $merge              = array_merge($this->classMap[$type], $define, [
                     'params' => $param,
                     'model'  => $model
                 ]);
@@ -88,7 +87,7 @@ class Validator extends BaseValidator
 
     /**
      * @return bool
-     * @throws Exception
+     * @throws
      */
     public function validation(): bool
     {
@@ -113,7 +112,7 @@ class Validator extends BaseValidator
     /**
      * @param BaseValidator|array|Closure $val
      * @return array
-     * @throws Exception
+     * @throws
      */
     private function check(BaseValidator|array|Closure $val): array
     {

@@ -13,8 +13,8 @@ namespace validator;
 class LengthValidator extends BaseValidator
 {
 
-	const MAX_LENGTH = 'max';
-	const MIN_LENGTH = 'min';
+	const string MAX_LENGTH = 'max';
+	const string MIN_LENGTH = 'min';
 
 	public string $method;
 

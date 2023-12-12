@@ -14,150 +14,150 @@ use Exception;
 abstract class BaseValidator
 {
 
-	public array $field = [];
+    public array $field = [];
 
-	public array $rules = [];
+    public array $rules = [];
 
-	public string $method;
+    public string $method;
 
-	protected bool $isFail = TRUE;
+    protected bool $isFail = TRUE;
 
-	protected string $message = '';
+    protected string $message = '';
 
-	protected array $params = [];
+    protected array $params = [];
 
-	protected ?Model $model = null;
-
-
-	/**
-	 * @param $model
-	 */
-	public function setModel($model): void
-	{
-		$this->model = $model;
-	}
-
-	/**
-	 * @return Model|null
-	 */
-	public function getModel(): ?Model
-	{
-		return $this->model;
-	}
+    protected ?Model $model = null;
 
 
-	/**
-	 * BaseValidator constructor.
-	 * @param array $config
-	 */
-	public function __construct(array $config = [])
-	{
-		$this->regConfig($config);
-	}
+    /**
+     * @param $model
+     */
+    public function setModel($model): void
+    {
+        $this->model = $model;
+    }
+
+    /**
+     * @return Model|null
+     */
+    public function getModel(): ?Model
+    {
+        return $this->model;
+    }
 
 
-	/**
-	 * @param $config
-	 */
-	private function regConfig($config): void
-	{
-		if (count($config) < 1) {
-			return;
-		}
-		foreach ($config as $key => $val) {
-			$this->$key = $val;
-		}
-	}
+    /**
+     * BaseValidator constructor.
+     * @param array $config
+     */
+    public function __construct(array $config = [])
+    {
+        $this->regConfig($config);
+    }
 
-	/**
-	 * @return bool
-	 * @throws Exception
-	 */
-	public function trigger(): bool
-	{
-		throw new Exception('Child Class must define method of trigger');
-	}
 
-	/**
-	 * @return array
-	 */
-	protected function getParams(): array
-	{
-		return $this->params;
-	}
+    /**
+     * @param $config
+     */
+    private function regConfig($config): void
+    {
+        if (count($config) < 1) {
+            return;
+        }
+        foreach ($config as $key => $val) {
+            $this->$key = $val;
+        }
+    }
 
-	/**
-	 * @param array $data
-	 * @return $this
-	 */
-	public function setParams(array $data): static
-	{
-		$this->params = $data;
-		return $this;
-	}
+    /**
+     * @return bool
+     * @throws
+     */
+    public function trigger(): bool
+    {
+        throw new Exception('Child Class must define method of trigger');
+    }
+
+    /**
+     * @return array
+     */
+    protected function getParams(): array
+    {
+        return $this->params;
+    }
+
+    /**
+     * @param array $data
+     * @return $this
+     */
+    public function setParams(array $data): static
+    {
+        $this->params = $data;
+        return $this;
+    }
 
     /**
      * @param $field
      * @param $message
      * @return bool
      */
-	public function addError($field, $message): bool
-	{
-		$this->isFail = FALSE;
+    public function addError($field, $message): bool
+    {
+        $this->isFail = FALSE;
 
-		if (!is_null($field)) {
-			$message = str_replace(':attribute', $field, $message);
-		}
+        if (!is_null($field)) {
+            $message = str_replace(':attribute', $field, $message);
+        }
 
-        \trigger_print_error($message,"mysql");
-		$this->message = $message;
+        \trigger_print_error($message, "mysql");
+        $this->message = $message;
 
-		return $this->isFail;
-	}
-
-
-	/**
-	 * @param string|array $fields
-	 * @param callable $callback
-	 * @param ...$params
-	 * @return bool
-	 */
-	protected function _validator(string|array $fields, callable $callback, ...$params): bool
-	{
-		if (is_string($fields)) {
-			$fields = [$fields];
-		}
-		foreach ($fields as $field) {
-			if (!$callback($field, ...$params)) {
-				return false;
-			}
-		}
-		return true;
-	}
+        return $this->isFail;
+    }
 
 
-	/**
-	 * @return string
-	 */
-	public function getError(): string
-	{
-		return $this->message;
-	}
+    /**
+     * @param string|array $fields
+     * @param callable $callback
+     * @param ...$params
+     * @return bool
+     */
+    protected function _validator(string|array $fields, callable $callback, ...$params): bool
+    {
+        if (is_string($fields)) {
+            $fields = [$fields];
+        }
+        foreach ($fields as $field) {
+            if (!$callback($field, ...$params)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-	/**
-	 * @param $name
-	 * @param $value
-	 * @throws Exception
-	 */
-	public function __set($name, $value)
-	{
-		$method = 'set' . ucfirst($name);
-		if (method_exists($this, $method)) {
-			$this->$method($value);
-		} else if (property_exists($this, $name)) {
-			$this->$name = $value;
-		} else {
-			throw new Exception('unknown property ' . $name . ' in class ' . static::class);
-		}
-	}
+
+    /**
+     * @return string
+     */
+    public function getError(): string
+    {
+        return $this->message;
+    }
+
+    /**
+     * @param $name
+     * @param $value
+     * @throws
+     */
+    public function __set($name, $value)
+    {
+        $method = 'set' . ucfirst($name);
+        if (method_exists($this, $method)) {
+            $this->$method($value);
+        } else if (property_exists($this, $name)) {
+            $this->$name = $value;
+        } else {
+            throw new Exception('unknown property ' . $name . ' in class ' . static::class);
+        }
+    }
 }
