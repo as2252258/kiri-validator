@@ -10,32 +10,21 @@ declare(strict_types=1);
 namespace validator;
 
 
+use Database\ModelInterface;
+
 /**
  *
  */
 class IntegerValidator extends BaseValidator
 {
 
-	const MIN = 'min';
-	const MAX = 'max';
-
-	public ?int $value = null;
-	private string $type = '';
-
     /**
+     * @param string $field
+     * @param float $value
      * @return bool
      */
-	public function trigger(): bool
-	{
-		return $this->_validator($this->field, function ($field, $params, $origin, $type) {
-			$value = $params[$field] ?? null;
-			if ($type !== self::MIN && $value < $origin) {
-				return $this->addError($field,'The ' . $field . ' cannot be less than the default value.');
-			}
-			if ($type !== self::MAX && $value > $origin) {
-				return $this->addError($field,'The ' . $field . ' cannot be greater than the default value.');
-			}
-			return true;
-		}, $this->params, $this->value, $this->type);
-	}
+    public function trigger(string $field, mixed $value): bool
+    {
+        return (float)$value == $value;
+    }
 }

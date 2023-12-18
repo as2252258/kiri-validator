@@ -13,97 +13,57 @@ namespace validator;
 class LengthValidator extends BaseValidator
 {
 
-	const string MAX_LENGTH = 'max';
-	const string MIN_LENGTH = 'min';
+    const string MAX_LENGTH = 'max';
+    const string MIN_LENGTH = 'min';
 
-	public string $method;
+    public string $method;
 
-	public int $value;
+    public int $value;
 
     /**
+     * @param string $field
+     * @param mixed $value
      * @return bool
      */
-	public function trigger(): bool
-	{
-		return $this->_validator($this->field, function ($field, $params, $method, $length) {
-			$value = $params[$field] ?? null;
-			return match ($method) {
-				self::MAX_LENGTH => $this->maxLength($field, (string)$value),
-				self::MIN_LENGTH => $this->minLength($field, (string)$value),
-				default => $this->defaultLength($field, (string)$value),
-			};
-		}, $this->params, strtolower($this->method), $this->value);
-	}
+    public function trigger(string $field, mixed $value): bool
+    {
+        return match ($this->method) {
+            self::MAX_LENGTH => $this->maxLength((string)$value),
+            self::MIN_LENGTH => $this->minLength((string)$value),
+            default          => $this->defaultLength((string)$value),
+        };
+    }
 
     /**
-     * @param $field
-     * @param $value
+     * @param string $value
      * @return bool
      *
      * 效验长度是否大于最大长度
      */
-	private function maxLength($field, $value): bool
-	{
-		if (is_array($value)) {
-			if (count($value) > $value) {
-				return $this->addError($field, 'The param :attribute length overflow');
-			}
-		} else {
-			if (is_numeric($value) && strlen((string)$value) > $this->value) {
-				return $this->addError($field, 'The param :attribute length overflow');
-			}
-			if (strlen($value) > $this->value) {
-				return $this->addError($field, 'The param :attribute length overflow');
-			}
-		}
-		return TRUE;
-	}
+    private function maxLength(string $value): bool
+    {
+        return mb_strlen($value) <= $this->value;
+    }
 
     /**
-     * @param $field
-     * @param $value
+     * @param string $value
      * @return bool
      *
      * 效验长度是否小于最小长度
      */
-	private function minLength($field, $value): bool
-	{
-		if (is_array($value)) {
-			if (count($value) < $value) {
-				return $this->addError($field, 'The param :attribute length error');
-			}
-		} else {
-			if (is_numeric($value) && strlen((string)$value) < $this->value) {
-				return $this->addError($field, 'The param :attribute length overflow');
-			}
-			if (strlen($value) < $this->value) {
-				return $this->addError($field, 'The param :attribute length error');
-			}
-		}
-		return TRUE;
-	}
+    private function minLength(string $value): bool
+    {
+        return mb_strlen($value) >= $this->value;
+    }
 
     /**
-     * @param $field
-     * @param $value
+     * @param string $value
      * @return bool
      *
      * 效验长度是否小于最小长度
      */
-	private function defaultLength($field, $value): bool
-	{
-		if (is_array($value)) {
-			if (count($value) !== $value) {
-				return $this->addError($field, 'The param :attribute length error');
-			}
-		} else {
-			if (is_numeric($value) && strlen((string)$value) !== $this->value) {
-				return $this->addError($field, 'The param :attribute length overflow');
-			}
-			if (mb_strlen($value) !== $this->value) {
-				return $this->addError($field, 'The param :attribute length error; ' . mb_strlen($value) . ':' . $this->value);
-			}
-		}
-		return TRUE;
-	}
+    private function defaultLength(string $value): bool
+    {
+        return mb_strlen($value) == $this->value;
+    }
 }

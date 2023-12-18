@@ -10,116 +10,81 @@ declare(strict_types=1);
 namespace validator;
 
 
+use Database\ModelInterface;
+use function json_validate;
+
 class TypesOfValidator extends BaseValidator
 {
 
 
-    const string JSON  = 'json';
-    const string FLOAT = 'float';
-    const string ARRAY  = 'array';
+    const string JSON    = 'json';
+    const string FLOAT   = 'float';
+    const string ARRAY   = 'array';
     const string STRING  = 'string';
     const string INTEGER = 'integer';
-
-    private ?int $min = null;
-    private ?int $max = null;
-
-    /** @var array */
-    public array $types = [
-        self::JSON    => 'json',
-        self::FLOAT   => 'float',
-        self::ARRAY   => 'array',
-        self::STRING  => 'string',
-        self::INTEGER => 'integer'
-    ];
 
     /** @var string */
     public string $method;
 
-
     /**
+     * @param string $field
+     * @param mixed $value
      * @return bool
      */
-    public function trigger(): bool
+    public function trigger(string $field, mixed $value): bool
     {
-        return $this->_validator($this->field, function ($field, $params, $method, $types) {
-            if (!in_array($method, $types)) {
-                return true;
-            }
-            $value = $params[$field] ?? null;
-            return match ($method) {
-                self::INTEGER => $this->integerFormat($field, $value),
-                self::FLOAT => $this->floatFormat($field, $value),
-                self::JSON => $this->jsonFormat($field, $value),
-                self::STRING => $this->stringFormat($field, $value),
-                self::ARRAY => $this->arrayFormat($field, $value),
-            };
-        }, $this->params, $this->method, $this->types);
+        return match ($this->method) {
+            self::INTEGER => $this->integerFormat($value),
+            self::FLOAT   => $this->floatFormat($value),
+            self::JSON    => $this->jsonFormat($value),
+            self::STRING  => $this->stringFormat($value),
+            self::ARRAY   => $this->arrayFormat($value),
+        };
     }
 
     /**
-     * @param $field
-     * @param $value
+     * @param string|null $value
      * @return bool
      */
-    public function jsonFormat($field, $value): bool
+    public function jsonFormat(?string $value): bool
     {
-        if (!is_string($value) || is_null(json_decode($value))) {
-            return $this->addError($field, 'The ' . $field . ' not is JSON data.');
-        }
-        return true;
+        return json_validate($value);
     }
 
     /**
-     * @param $field
-     * @param $value
+     * @param mixed $value
      * @return bool
      */
-    public function arrayFormat($field, $value): bool
+    public function arrayFormat(mixed $value): bool
     {
-        if (!is_array($value)) {
-            return $this->addError($field, 'The ' . $field . ' not is array data.');
-        }
-        return true;
+        return is_array($value);
     }
 
     /**
-     * @param $field
-     * @param $value
+     * @param mixed $value
      * @return bool
      */
-    public function stringFormat($field, $value): bool
+    public function stringFormat(mixed $value): bool
     {
-        if (!is_string($value)) {
-            return $this->addError($field, 'The ' . $field . ' not is string data.');
-        }
-        return true;
+        return is_string($value);
     }
 
     /**
-     * @param $field
-     * @param $value
+     * @param mixed $value
      * @return bool
      */
-    public function integerFormat($field, $value): bool
+    public function integerFormat(mixed $value): bool
     {
-        if ((int)$value != $value) {
-            return $this->addError($field, 'The ' . $field . ' not is number data.');
-        }
-        return true;
+        return (int)$value == $value;
     }
 
     /**
-     * @param $field
-     * @param $value
+     * @param mixed $value
      * @return bool
      */
-    public function floatFormat($field, $value): bool
+    public function floatFormat(mixed $value): bool
     {
-        $trim = (float)$value;
-        if ($trim != $value) {
-            return $this->addError($field, 'The ' . $field . ' not is float data.');
-        }
-        return true;
+        return (float)$value == $value;
     }
 
 }

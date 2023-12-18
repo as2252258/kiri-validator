@@ -16,116 +16,113 @@ use Kiri;
 class Validator extends BaseValidator
 {
 
-    use RuleTrait;
+    /**
+     * classMap
+     */
+    const array classMap = [
+        'not empty' => ['class' => EmptyValidator::class, 'method' => EmptyValidator::CAN_NOT_EMPTY,],
+        'not null'  => ['class' => EmptyValidator::class, 'method' => EmptyValidator::CAN_NOT_NULL,],
+        'required'  => ['class' => RequiredValidator::class,],
+        'enum'      => ['class' => EnumValidator::class,],
+        'unique'    => ['class' => UniqueValidator::class,],
+        'datetime'  => ['class' => DateTimeValidator::class, 'method' => DateTimeValidator::DATE_TIME,],
+        'date'      => ['class' => DateTimeValidator::class, 'method' => DateTimeValidator::DATE,],
+        'time'      => ['class' => DateTimeValidator::class, 'method' => DateTimeValidator::TIME,],
+        'timestamp' => ['class' => DateTimeValidator::class, 'method' => DateTimeValidator::STR_TO_TIME,],
+        'string'    => ['class' => TypesOfValidator::class, 'method' => TypesOfValidator::STRING,],
+        'int'       => ['class' => TypesOfValidator::class, 'method' => TypesOfValidator::INTEGER,],
+        'min'       => ['class' => IntegerValidator::class],
+        'max'       => ['class' => IntegerValidator::class],
+        'json'      => ['class' => TypesOfValidator::class, 'method' => TypesOfValidator::JSON,],
+        'float'     => ['class' => TypesOfValidator::class, 'method' => TypesOfValidator::FLOAT,],
+        'array'     => ['class' => TypesOfValidator::class, 'method' => TypesOfValidator::ARRAY,],
+        'maxlength' => ['class' => LengthValidator::class, 'method' => 'max',],
+        'minlength' => ['class' => LengthValidator::class, 'method' => 'min',],
+        'email'     => ['class' => EmailValidator::class, 'method' => 'email',],
+        'length'    => ['class' => LengthValidator::class, 'method' => 'default',],
+        'round'     => ['class' => RoundValidator::class,],
+    ];
 
     /** @var BaseValidator[] */
     private ?array $validators = [];
 
 
     /**
-     * @param array $params
      * @param ModelInterface $model
-     * @return Validator
-     */
-    public static function instance(array $params, ModelInterface $model): static
-    {
-        $validator = new Validator();
-        $validator->setParams($params);
-        $validator->setModel($model);
-        return $validator;
-    }
-
-    /**
      * @param $field
      * @param $rules
      * @return $this
-     * @throws
      */
-    public function make($field, $rules): static
+    public function make(ModelInterface $model, array $fields, array $rules): static
     {
-        if (!is_array($field)) {
-            $field = [$field];
+        foreach ($fields as $field) {
+            $this->createRule($field, $rules, $model);
         }
-
-        $param = $this->getParams();
-        $model = $this->getModel();
-
-        $this->createRule($field, $rules, $model, $param);
-
         return $this;
     }
 
     /**
-     * @param $field
-     * @param $rule
-     * @param $model
-     * @param $param
-     * @throws
-     * ['maxLength'=>150, 'required', 'minLength' => 100]
+     * @param string $field
+     * @param array $rule
+     * @param ModelInterface $model
+     * @throws \Exception
      */
-    public function createRule($field, $rule, $model, $param): void
+    public function createRule(string $field, array $rule, ModelInterface $model): void
     {
-        $define = ['field' => $field];
+        if (!isset($this->validators[$field])) {
+            $this->validators[$field] = [];
+        }
         foreach ($rule as $key => $val) {
-            if (is_string($key)) {
-                $type            = strtolower($key);
-                $define['value'] = $val;
+            if (is_numeric($key) && method_exists($model, $val)) {
+                $this->validators[$field][] = [$model, $val];
             } else {
-                $type = strtolower($val);
-            }
-            if (!isset($this->classMap[$type])) {
-                $this->validators[] = [$model, $val];
-            } else {
-                $merge              = array_merge($this->classMap[$type], $define, [
-                    'params' => $param,
-                    'model'  => $model
-                ]);
-                $this->validators[] = $merge;
+                $this->validators[$field][] = $this->mapGen($model, $key, $val);
             }
         }
     }
 
+
     /**
-     * @return bool
-     * @throws
+     * @param array $defined
+     * @param $key
+     * @param $val
+     * @return array
+     * @throws \Exception
      */
-    public function validation(): bool
+    protected function mapGen(ModelInterface $model, $key, $val): array
+    {
+        if (is_numeric($key)) {
+            $defined = self::classMap[$val];
+        } else {
+            $defined          = self::classMap[$key];
+            $defined['value'] = $val;
+        }
+        if ($defined['class'] == UniqueValidator::class) {
+            $defined['model'] = $model;
+        }
+        return [Kiri::createObject($defined), 'trigger'];
+    }
+
+    /**
+     * @param ModelInterface $model
+     * @return bool
+     */
+    public function validation(ModelInterface $model): bool
     {
         if (count($this->validators) < 1) {
             return true;
         }
-        foreach ($this->validators as $val) {
-            [$result, $validator] = $this->check($val);
-            if ($result === true) {
-                continue;
+        $attributes = $model->getChanges();
+        foreach ($attributes as $field => $attribute) {
+            if (isset($this->validators[$field])) {
+                $validator = $this->validators[$field];
+                foreach ($validator as $value) {
+                    if (!call_user_func($value, $field, $attribute)) {
+                        return $this->addError($field, 'field :attribute data format error.');
+                    }
+                }
             }
-            $isTrue = false;
-            if ($validator instanceof BaseValidator) {
-                $this->addError(null, $validator->getError());
-            }
-            break;
         }
-        $this->validators = [];
-        return !isset($isTrue);
+        return true;
     }
-
-    /**
-     * @param BaseValidator|array|Closure $val
-     * @return array
-     * @throws
-     */
-    private function check(BaseValidator|array|Closure $val): array
-    {
-        if (is_callable($val, true)) {
-            return [call_user_func($val, $this), $val];
-        }
-
-        $class = Kiri::getDi()->get($val['class']);
-        unset($val['class']);
-
-        Kiri::configure($class, $val);
-
-        return [$class->trigger(), $class];
-    }
-
 }

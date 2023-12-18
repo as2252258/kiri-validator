@@ -14,18 +14,14 @@ class RequiredValidator extends BaseValidator
 {
 
     /**
+     * @param string $field
+     * @param mixed $value
      * @return bool
      * 检查是否存在
      */
-	public function trigger(): bool
-	{
-		return $this->_validator($this->field, function ($field, $params) {
-			if (!isset($params[$field])) {
-				return $this->addError($field,'The param :attribute not exists');
-			} else {
-				return true;
-			}
-		}, $this->params);
-	}
+    public function trigger(string $field, mixed $value): bool
+    {
+        return !is_null($value);
+    }
 
 }

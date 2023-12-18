@@ -16,18 +16,14 @@ class EmailValidator extends BaseValidator
 {
 
     /**
+     * @param string $field
+     * @param mixed $value
      * @return bool
      * 检查是否存在
      */
-	public function trigger(): bool
-	{
-		return $this->_validator($this->field, function ($field, $params) {
-			$value = $params[$field] ?? null;
-            if (!filter_var($value,FILTER_VALIDATE_EMAIL)) {
-                return $this->addError($field,'The param :attribute format error');
-            }
-            return true;
-		}, $this->params);
-	}
+    public function trigger(string $field, mixed $value): bool
+    {
+        return filter_var($value, FILTER_VALIDATE_EMAIL);
+    }
 
 }

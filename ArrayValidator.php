@@ -18,19 +18,15 @@ class ArrayValidator extends BaseValidator
 {
 
     /**
+     * @param string $field
+     * @param mixed $value
      * @return bool
      *
      * 检查
      */
-	public function trigger(): bool
-	{
-		return $this->_validator($this->field, function ($field, $params) {
-			$value = $params[$field] ?? null;
-			if (!is_array($value)) {
-				return $this->addError($field, 'The param :attribute must a array');
-			}
-			return true;
-		}, $this->params);
-	}
+    public function trigger(string $field, mixed $value): bool
+    {
+        return is_array($value);
+    }
 
 }

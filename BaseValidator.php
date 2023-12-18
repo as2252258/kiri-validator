@@ -5,6 +5,7 @@ namespace validator;
 
 
 use Database\Model;
+use Database\ModelInterface;
 use Exception;
 
 
@@ -14,87 +15,23 @@ use Exception;
 abstract class BaseValidator
 {
 
-    public array $field = [];
+    public mixed $value;
 
-    public array $rules = [];
 
-    public string $method;
-
-    protected bool $isFail = TRUE;
-
-    protected string $message = '';
-
-    protected array $params = [];
-
-    protected ?Model $model = null;
+    protected string $message;
 
 
     /**
-     * @param $model
-     */
-    public function setModel($model): void
-    {
-        $this->model = $model;
-    }
-
-    /**
-     * @return Model|null
-     */
-    public function getModel(): ?Model
-    {
-        return $this->model;
-    }
-
-
-    /**
-     * BaseValidator constructor.
-     * @param array $config
-     */
-    public function __construct(array $config = [])
-    {
-        $this->regConfig($config);
-    }
-
-
-    /**
-     * @param $config
-     */
-    private function regConfig($config): void
-    {
-        if (count($config) < 1) {
-            return;
-        }
-        foreach ($config as $key => $val) {
-            $this->$key = $val;
-        }
-    }
-
-    /**
+     * @param string $field
+     * @param float $value
      * @return bool
-     * @throws
+     * @throws Exception
      */
-    public function trigger(): bool
+    public function trigger(string $field, mixed $value): bool
     {
         throw new Exception('Child Class must define method of trigger');
     }
 
-    /**
-     * @return array
-     */
-    protected function getParams(): array
-    {
-        return $this->params;
-    }
-
-    /**
-     * @param array $data
-     * @return $this
-     */
-    public function setParams(array $data): static
-    {
-        $this->params = $data;
-        return $this;
-    }
 
     /**
      * @param $field
@@ -103,36 +40,13 @@ abstract class BaseValidator
      */
     public function addError($field, $message): bool
     {
-        $this->isFail = FALSE;
-
         if (!is_null($field)) {
             $message = str_replace(':attribute', $field, $message);
         }
 
-        \trigger_print_error($message, "mysql");
         $this->message = $message;
 
-        return $this->isFail;
-    }
-
-
-    /**
-     * @param string|array $fields
-     * @param callable $callback
-     * @param ...$params
-     * @return bool
-     */
-    protected function _validator(string|array $fields, callable $callback, ...$params): bool
-    {
-        if (is_string($fields)) {
-            $fields = [$fields];
-        }
-        foreach ($fields as $field) {
-            if (!$callback($field, ...$params)) {
-                return false;
-            }
-        }
-        return true;
+        return false;
     }
 
 
@@ -142,22 +56,5 @@ abstract class BaseValidator
     public function getError(): string
     {
         return $this->message;
-    }
-
-    /**
-     * @param $name
-     * @param $value
-     * @throws
-     */
-    public function __set($name, $value)
-    {
-        $method = 'set' . ucfirst($name);
-        if (method_exists($this, $method)) {
-            $this->$method($value);
-        } else if (property_exists($this, $name)) {
-            $this->$name = $value;
-        } else {
-            throw new Exception('unknown property ' . $name . ' in class ' . static::class);
-        }
     }
 }

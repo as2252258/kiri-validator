@@ -13,23 +13,15 @@ use Exception;
 class RoundValidator extends BaseValidator
 {
 
-
-    public ?int $value = null;
-
-
     /**
+     * @param string $field
+     * @param mixed $value
      * @return bool
      * @throws
      */
-    public function trigger(): bool
+    public function trigger(string $field, mixed $value): bool
     {
-        return $this->_validator($this->field, function ($field, $model, $param) {
-            $value = $model->getAttribute($field);
-            if ($value == null || round($value, $param) != $value) {
-                return $this->addError($field, 'The param :attribute length error');
-            }
-            return true;
-        }, $this->model, $this->value);
+        return round($value, $this->value) == $value;
     }
 
 

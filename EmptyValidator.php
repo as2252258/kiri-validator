@@ -27,21 +27,18 @@ class EmptyValidator extends BaseValidator
     public string $method;
 
     /**
+     * @param string $field
+     * @param mixed $value
      * @return bool
      *
      * 检查参数是否为NULL
      */
-    public function trigger(): bool
+    public function trigger(string $field, mixed $value): bool
     {
-        return $this->_validator($this->field, function ($field, $params, $method) {
-            $value = $params[$field] ?? null;
-            if ($value === null) {
-                return $this->addError($field, 'The :attribute can not null.');
-            }
-            if (empty($value)) {
-                return $this->addError($field, 'The :attribute can not empty.');
-            }
-            return true;
-        }, $this->params, strtolower($this->method));
+        return match ($this->method) {
+            self::CAN_NOT_NULL  => !is_null($value),
+            self::CAN_NOT_EMPTY => !empty($value),
+            default             => true
+        };
     }
 }
