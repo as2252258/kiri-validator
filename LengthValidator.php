@@ -18,8 +18,6 @@ class LengthValidator extends BaseValidator
 
     public string $method;
 
-    public int $value;
-
     /**
      * @param string $field
      * @param mixed $value
