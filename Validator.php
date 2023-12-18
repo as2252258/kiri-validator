@@ -36,10 +36,10 @@ class Validator extends BaseValidator
         'json'      => ['class' => TypesOfValidator::class, 'method' => TypesOfValidator::JSON,],
         'float'     => ['class' => TypesOfValidator::class, 'method' => TypesOfValidator::FLOAT,],
         'array'     => ['class' => TypesOfValidator::class, 'method' => TypesOfValidator::ARRAY,],
-        'maxlength' => ['class' => LengthValidator::class, 'method' => 'max',],
-        'minlength' => ['class' => LengthValidator::class, 'method' => 'min',],
-        'email'     => ['class' => EmailValidator::class, 'method' => 'email',],
-        'length'    => ['class' => LengthValidator::class, 'method' => 'default',],
+        'maxlength' => ['class' => LengthValidator::class, 'method' => LengthValidator::MAX_LENGTH,],
+        'minlength' => ['class' => LengthValidator::class, 'method' => LengthValidator::MIN_LENGTH,],
+        'email'     => ['class' => EmailValidator::class],
+        'length'    => ['class' => LengthValidator::class],
         'round'     => ['class' => RoundValidator::class,],
     ];
 
