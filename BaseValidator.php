@@ -34,18 +34,13 @@ abstract class BaseValidator
 
 
     /**
-     * @param $field
-     * @param $message
+     * @param string $field
+     * @param string $message
      * @return bool
      */
-    public function addError($field, $message): bool
+    public function addError(string $field, string $message): bool
     {
-        if (!is_null($field)) {
-            $message = str_replace(':attribute', $field, $message);
-        }
-
-        $this->message = $message;
-
+        $this->message = str_replace(':attribute', $field, $message);
         return false;
     }
 

@@ -38,46 +38,46 @@ class DateTimeValidator extends BaseValidator
     }
 
     /**
-     * @param $value
+     * @param string $value
      * @return bool
      *
      * 效验分秒 格式如  01:02 or 01-02
      */
-    public function validatorTime($value): bool
+    public function validatorTime(string $value): bool
     {
         return (bool)preg_match('/^\d{2}:\d{2}(:\d{2})?+(\.\d+)?$/', $value);
     }
 
 
     /**
-     * @param $value
+     * @param string $value
      * @return bool
      *
      * 效验分秒 格式如 2017-12-22 01:02
      */
-    public function validateDatetime($value): bool
+    public function validateDatetime(string $value): bool
     {
         return (bool)preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?+(\.\d+)?$/', $value);
     }
 
     /**
-     * @param $value
+     * @param string $value
      * @return bool
      *
      * 效验分秒 格式如  2017-12-22
      */
-    public function validatorDate($value): bool
+    public function validatorDate(string $value): bool
     {
         return (bool)preg_match('/^\d{4}-\d{2}-\d{2}$/', $value);
     }
 
     /**
-     * @param $value
+     * @param string|int $value
      * @return bool
      *
      * 效验时间戳 格式如  1521452254
      */
-    public function validatorTimestamp($value): bool
+    public function validatorTimestamp(string|int $value): bool
     {
         return (bool)preg_match('/^1\d{9}$/', $value);
     }

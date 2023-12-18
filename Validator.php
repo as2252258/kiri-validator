@@ -92,6 +92,7 @@ class Validator extends BaseValidator
         return [Kiri::createObject($defined), 'trigger'];
     }
 
+
     /**
      * @param ModelInterface $model
      * @return bool
