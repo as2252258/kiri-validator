@@ -49,45 +49,34 @@ class Validator extends BaseValidator
 
     /**
      * @param ModelInterface $model
-     * @param $field
-     * @param $rules
+     * @param array $fields
+     * @param array $rules
      * @return $this
      */
     public function make(ModelInterface $model, array $fields, array $rules): static
     {
         foreach ($fields as $field) {
-            $this->createRule($field, $rules, $model);
+            if (!isset($this->validators[$field])) {
+                $this->validators[$field] = [];
+            }
+            foreach ($rules as $key => $val) {
+                if (is_numeric($key) && method_exists($model, $val)) {
+                    $this->validators[$field][] = [$model, $val];
+                } else {
+                    $this->validators[$field][] = $this->mapGen($model, $key, $val);
+                }
+            }
         }
         return $this;
     }
 
+
     /**
-     * @param string $field
-     * @param array $rule
      * @param ModelInterface $model
-     * @throws \Exception
-     */
-    public function createRule(string $field, array $rule, ModelInterface $model): void
-    {
-        if (!isset($this->validators[$field])) {
-            $this->validators[$field] = [];
-        }
-        foreach ($rule as $key => $val) {
-            if (is_numeric($key) && method_exists($model, $val)) {
-                $this->validators[$field][] = [$model, $val];
-            } else {
-                $this->validators[$field][] = $this->mapGen($model, $key, $val);
-            }
-        }
-    }
-
-
-    /**
-     * @param array $defined
      * @param $key
      * @param $val
      * @return array
-     * @throws \Exception
+     * @throws
      */
     protected function mapGen(ModelInterface $model, $key, $val): array
     {
