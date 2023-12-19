@@ -23,15 +23,19 @@ class UniqueValidator extends BaseValidator
 
 
     /**
-     * @param string $field
+     * @var string
+     */
+    public string $field;
+
+    /**
      * @param mixed $value
      * @return bool
      * @throws
      * 检查是否存在
      */
-    public function trigger(string $field, mixed $value): bool
+    public function trigger(mixed $value): bool
     {
-        return $this->model::query()->where([$field => $value])->exists() === false;
+        return $this->model::query()->where([$this->field => $value])->exists() === false;
     }
 
 

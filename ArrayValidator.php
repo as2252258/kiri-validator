@@ -18,13 +18,12 @@ class ArrayValidator extends BaseValidator
 {
 
     /**
-     * @param string $field
      * @param mixed $value
      * @return bool
      *
      * 检查
      */
-    public function trigger(string $field, mixed $value): bool
+    public function trigger(mixed $value): bool
     {
         return is_array($value);
     }

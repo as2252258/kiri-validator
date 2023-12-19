@@ -21,13 +21,11 @@ class DateTimeValidator extends BaseValidator
     public string $method;
 
     /**
-     * @param string $field
      * @param mixed $value
      * @return bool
      */
-    public function trigger(string $field, mixed $value): bool
+    public function trigger(mixed $value): bool
     {
-        $value = $params[$field] ?? null;
         return match ($this->method) {
             self::DATE        => $this->validatorDate($value),
             self::DATE_TIME   => $this->validateDatetime($value),

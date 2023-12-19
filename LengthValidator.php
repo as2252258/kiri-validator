@@ -22,11 +22,10 @@ class LengthValidator extends BaseValidator
     public string $method = 'default';
 
     /**
-     * @param string $field
      * @param mixed $value
      * @return bool
      */
-    public function trigger(string $field, mixed $value): bool
+    public function trigger(mixed $value): bool
     {
         return match ($this->method) {
             self::MAX_LENGTH => $this->maxLength((string)$value),

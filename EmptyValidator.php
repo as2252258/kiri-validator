@@ -27,13 +27,12 @@ class EmptyValidator extends BaseValidator
     public string $method;
 
     /**
-     * @param string $field
      * @param mixed $value
      * @return bool
      *
      * 检查参数是否为NULL
      */
-    public function trigger(string $field, mixed $value): bool
+    public function trigger(mixed $value): bool
     {
         return match ($this->method) {
             self::CAN_NOT_NULL  => !is_null($value),

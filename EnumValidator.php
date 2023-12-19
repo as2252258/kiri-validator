@@ -13,11 +13,10 @@ class EnumValidator extends BaseValidator
 {
 
     /**
-     * @param string $field
      * @param mixed $value
      * @return bool
      */
-    public function trigger(string $field, mixed $value): bool
+    public function trigger(mixed $value): bool
     {
         return in_array($value, $this->value);
     }

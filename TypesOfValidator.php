@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace validator;
 
 
-use Database\ModelInterface;
 use function json_validate;
 
 class TypesOfValidator extends BaseValidator
@@ -31,7 +30,7 @@ class TypesOfValidator extends BaseValidator
      * @param mixed $value
      * @return bool
      */
-    public function trigger(string $field, mixed $value): bool
+    public function trigger(mixed $value): bool
     {
         return match ($this->method) {
             self::INTEGER => $this->integerFormat($value),

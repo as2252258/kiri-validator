@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace validator;
 
 
-use Closure;
 use Database\ModelInterface;
 use Kiri;
 
@@ -63,7 +62,7 @@ class Validator extends BaseValidator
                 if (is_numeric($key) && method_exists($model, $val)) {
                     $this->validators[$field][] = [$model, $val];
                 } else {
-                    $this->validators[$field][] = $this->mapGen($model, $key, $val);
+                    $this->validators[$field][] = $this->mapGen($model, $field, $key, $val);
                 }
             }
         }
@@ -78,7 +77,7 @@ class Validator extends BaseValidator
      * @return array
      * @throws
      */
-    protected function mapGen(ModelInterface $model, $key, $val): array
+    protected function mapGen(ModelInterface $model, $field, $key, $val): array
     {
         if (is_numeric($key)) {
             $defined = self::classMap[$val];
@@ -88,6 +87,7 @@ class Validator extends BaseValidator
         }
         if ($defined['class'] == UniqueValidator::class) {
             $defined['model'] = $model;
+            $defined['field'] = $field;
         }
         return [Kiri::createObject($defined), 'trigger'];
     }
@@ -107,7 +107,7 @@ class Validator extends BaseValidator
             if (isset($this->validators[$field])) {
                 $validator = $this->validators[$field];
                 foreach ($validator as $value) {
-                    if (!call_user_func($value, $field, $attribute)) {
+                    if (!call_user_func($value, $attribute)) {
                         return $this->addError($field, 'field :attribute data format error.');
                     }
                 }

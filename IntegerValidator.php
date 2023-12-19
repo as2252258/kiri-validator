@@ -10,8 +10,6 @@ declare(strict_types=1);
 namespace validator;
 
 
-use Database\ModelInterface;
-
 /**
  *
  */
@@ -19,11 +17,10 @@ class IntegerValidator extends BaseValidator
 {
 
     /**
-     * @param string $field
      * @param float $value
      * @return bool
      */
-    public function trigger(string $field, mixed $value): bool
+    public function trigger(mixed $value): bool
     {
         return (float)$value == $value;
     }

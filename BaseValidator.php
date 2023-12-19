@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace validator;
 
 
-use Database\Model;
-use Database\ModelInterface;
 use Exception;
 
 
@@ -22,12 +20,11 @@ abstract class BaseValidator
 
 
     /**
-     * @param string $field
      * @param float $value
      * @return bool
      * @throws Exception
      */
-    public function trigger(string $field, mixed $value): bool
+    public function trigger(mixed $value): bool
     {
         throw new Exception('Child Class must define method of trigger');
     }

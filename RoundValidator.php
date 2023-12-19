@@ -4,8 +4,6 @@
 namespace validator;
 
 
-use Exception;
-
 /**
  * Class RoundValidator
  * @package validator
@@ -19,7 +17,7 @@ class RoundValidator extends BaseValidator
      * @return bool
      * @throws
      */
-    public function trigger(string $field, mixed $value): bool
+    public function trigger(mixed $value): bool
     {
         return round($value, $this->value) == $value;
     }

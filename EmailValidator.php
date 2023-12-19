@@ -16,12 +16,11 @@ class EmailValidator extends BaseValidator
 {
 
     /**
-     * @param string $field
      * @param mixed $value
      * @return bool
      * 检查是否存在
      */
-    public function trigger(string $field, mixed $value): bool
+    public function trigger(mixed $value): bool
     {
         return filter_var($value, FILTER_VALIDATE_EMAIL);
     }
